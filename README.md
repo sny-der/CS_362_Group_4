@@ -49,6 +49,45 @@ We foresee a problem regarding different operating systems and testing environme
 
 In order to mitigate these risks we will first ensure that all of our devices can run the languages and libraries that we are using. We will also be sure that the information transferred does not rely on other software to decipher. With this we will ensure that when problems arise it is possible for us to solve them.
 
+# Use Cases
+Use Case 1:
+- Users who want to receive files through this software
+- The user launches the software
+- The user receives files from another specific user as they desire
+- The user launches the software and is able to view their own address, either through the main display or sub menus, and sends this address to another user, who is able to directly connect to the machine at that address and send the specified files.
+- The user is able to download those files, or is able to send those files to another user
+- The user is unable to view their own address, or is unable to be found through the software
+
+# Non-Functional Requirements
+- The software should have an easy to use gui
+- The software should not compromise the security of the user's machine
+- The software should be able to support a multitude of users
+
+# External Requirements
+- The software should be able to detect invalid address inputs, and prompt the user to reenter a valid address
+- The software should reject invalid file types
+- The software should be downloadable from GitHub, and should contain a text file instructing the user on how to set up and launch the software
+- The software documentation should be clear enough for others to improve its functionality
+
+# Software Toolset
+
+# Team Roles
+
+## Code Integration Coordinator
+A code integration coordinator is necessary to ensure that all code written by team members works together to create required functionality. Charles is suited to this role because he has experience integrating software.
+
+## Architecture Design Coordinator
+An architecture design coordinator is necessary to define a structure for the software, and to ensure the software maintains that structure. Abrum is suited to this role because he has experience designing software structure.
+
+## QA Coordinator
+A qa coordinator is necessary to ensure the software performs as desired, and does not have any internal bugs that prevent its operation. Jonathan is suited to this role because he has experience troubleshooting software.
+
+## Product & Requirements Lead
+A product & requirements lead is necessary to elicit requirements of the software, and to determine the most user friendly methods to fulfill those requirements. Arjun is suited to this role because he has experience determining requirements & user expectations. 
+
+# Schedule
+
+# Feedback Timing
 
 # Features (WIP)
 
