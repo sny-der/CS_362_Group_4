@@ -164,8 +164,8 @@ There should be several options for devices to connect to each other.
 - One should be one device to generate a link for the other device to connect to.
 - Another should be sharing one device via the existing software.
 
-Parallel tunnels. Users should be able to connect to several devices at once. Each established connection should have an On and Off switch. The user should be able to enable and disable each individual connection and the entire software at will.
-
+Sending and receiving data
+Sending and receiving data directly from the original sender. The system does not use any third party host or server. Connected devices send directly to each other in the form of messages and files. The software can send different file types including large files. The software also has a simple messaging system for small texts and pings that users can send to each other. 
 
 Encryption.
 - The packets are encrypted and decrypted on the sender and host machines. Any information traversing the internet will not have decipherable data.
