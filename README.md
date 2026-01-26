@@ -58,6 +58,64 @@ Use Case 1:
 - The user is able to download those files, or is able to send those files to another user
 - The user is unable to view their own address, or is unable to be found through the software
 
+Use Case 2 - Sending Data
+
+Actors: The user sending data, and the user receiving data.
+
+Triggers: Sender selects a file and chooses to send it to an existing contact on the user                interface in the file send place. 
+
+Preconditions: 
+- Both sender and receiver have the application installed and running.
+- The sender has already added Receiver as a contact
+- The sender has selected the receiver
+- The file to be sent exists on the Sender’s device and is accessible.
+- The receiver is allowing file receiving at this time.
+  
+Postconditions:
+- The file is securely transferred end-to-end encrypted from Sender to Receiver.
+- The Receiver receives and can access/decrypt the file on their device.
+- The Sender receives confirmation that the transfer completed successfully.
+- No intermediate server or third party ever accesses the file content.
+- If the Receiver was offline, the file is queued on the Sender’s device and delivered           automatically once the Receiver comes online. (stretch goal)
+
+List of Steps:
+1. The Sender opens the chat/accesses the Receivers contact info
+2. The Sender selects the “Send File” option (drag and drop)
+3. The Sender chooses the file from their device
+4. The app computes a hash (?) of the file and prepares metadata.
+5. The app checks the Receiver’s online status.
+6. The app initiates or re-uses the established P2P connection.
+7. The app performs key agreement (?)
+8. The app encrypts the file in chunks 
+9. The app streams the encrypted chunks + metadata to Receiver
+10. The Receiver’s app receives the chunks, decrypts and verifies
+11. The Receiver’s app saves the file locally
+12. The Receiver’s app sends a delivery acknowledgement to Sender
+13. The Sender’s app displays “File sent successfully”
+14. Both Sender and Receiver logs transfer.
+
+Extensions / Variations of the Success Scenario
+- Variation 1: Receiver Offline at Send Time
+   - After step 5: App detects Receiver is offline
+   - The app encrypts the file and stores it locally in an encrypted queue.
+   - Background process periodically checks Receiver status.
+   - When the receiver comes online, resume from step 6.
+   - Sender sees status: “Queued – will send when Receiver is online”
+- Variation 2: Large File with Resume Support
+   - During transfer (step 9), if connection drops, both sides track last chunk
+   - On reconnect, resume from the last acknowledged chunk 
+- Variation 3: Multiple Files or Mixed with Text
+   - Sender attaches multiple files or text + file in one message
+   - Treated as a batch, encrypted/send sequentially or in parallel if allowed
+  
+Exceptions: failure conditions and scenarios:
+- Receiver Never Comes Online: Queue persists indefinitely, or canceled by Sender, or            configurable timeout. 
+- Connection Fails Repeatedly: After retries with different methods, queue file and notify       Sender. (“Delivery delayed – network issues”). 
+- Integrity Check Failed on Receiver Side: Receiver rejects file, sends error to Sender, and     Sender notified.
+- Key Mismatch or Authentication Failure: Connection refused, Sender prompted to re-verify       contact information
+- Insufficient Storage / Space on Receiver: Receiver app rejects incoming transfer, notifies     Sender (“Receiver has insufficient space”)
+- Sender Cancels Mid-Transfer: Transfer aborts gracefully, partial data discarded on both        sides, Sender sees “Canceled”. 
+
 # Non-Functional Requirements
 - The software should have an easy to use gui
 - The software should not compromise the security of the user's machine
