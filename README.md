@@ -1,4 +1,4 @@
-# CS_362_Group_4
+# P2Ping
 # Team Members:
 
 - Charles Weber: Code Integration Coordinator
