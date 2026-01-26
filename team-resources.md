@@ -50,7 +50,7 @@ We foresee a problem regarding different operating systems and testing environme
 In order to mitigate these risks we will first ensure that all of our devices can run the languages and libraries that we are using. We will also be sure that the information transferred does not rely on other software to decipher. With this we will ensure that when problems arise it is possible for us to solve them.
 
 # Use Cases
-Use Case 1:
+## Use Case 1:
 - Users who want to receive files through this software
 - The user launches the software
 - The user receives files from another specific user as they desire
@@ -58,7 +58,7 @@ Use Case 1:
 - The user is able to download those files, or is able to send those files to another user
 - The user is unable to view their own address, or is unable to be found through the software
 
-Use Case 2 - Sending Data
+## Use Case 2 - Sending Data
 
 Actors: The user sending data, and the user receiving data.
 
@@ -115,6 +115,12 @@ Exceptions: failure conditions and scenarios:
 - Key Mismatch or Authentication Failure: Connection refused, Sender prompted to re-verify       contact information
 - Insufficient Storage / Space on Receiver: Receiver app rejects incoming transfer, notifies     Sender (“Receiver has insufficient space”)
 - Sender Cancels Mid-Transfer: Transfer aborts gracefully, partial data discarded on both        sides, Sender sees “Canceled”. 
+
+## Use Case 3
+
+
+## Use Case 4
+- Arjun will write a use case covering the ability to write messages within the app/software.
 
 # Non-Functional Requirements
 - The software should have an easy to use gui
