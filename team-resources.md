@@ -179,3 +179,18 @@ Encryption.
 “Offline” send option. Sender-side Queuing. Have the sender store unsent data and wait until the receiver is online to send. 
 
 It should also be possible for each device to have a public table that tells the other devices how to connect to the other devices. As long as one device is still in the same place and can be found. The other devices can find it and share their new locations.
+
+
+### Term Schedule 
+#### Week 4
+Milestone 3 - Project Architecture and Design
+#### Week 5 
+Milestone 4 - Implementation and Documentation 
+#### Week 6 
+Milestone 4 - Implemnetation and Documentation
+#### Week 7
+Milestone 5 - Testing and Implementation
+#### Week 8
+Milestone 6 - Beta Release
+#### Week 9 
+Milestone 7 - Final Release
