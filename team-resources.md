@@ -120,7 +120,43 @@ Exceptions: failure conditions and scenarios:
 
 
 ## Use Case 4
-- Arjun will write a use case covering the ability to write messages within the app/software.
+- Actors  
+  - Sender (User initiating the message)  
+  - Receiver (User receiving the message)  
+
+- Triggers  
+  - Sender opens a chat window or selects a contact and types a message or sends a “ping.”  
+
+- Preconditions  
+  - Both Sender and Receiver have the application installed.  
+  - Sender and Receiver are added as contacts.  
+  - Sender has selected the Receiver.  
+  - Receiver is either online, or offline messaging is enabled (stretch goal).  
+  - A secure P2P connection can be established or resumed.  
+
+- Postconditions  
+  - The message is delivered end-to-end encrypted from Sender to Receiver.  q
+  - Receiver can read the decrypted message.  
+  - Sender receives delivery or read confirmation (if enabled).  
+  - Message logs are stored locally for both users.  
+  - No third-party server stores or accesses the message contents.  
+
+- Main Success Scenario
+  - Sender opens the application.  
+  - Sender selects a Receiver from the contact list.  
+  - Sender types a text message or presses a “Ping” button.  
+  - The app generates message metadata (timestamp, sender ID, message ID).  
+  - The app checks Receiver’s online status.  
+  - The app establishes or reuses an encrypted P2P connection.  
+  - The app performs secure key agreement (if not already active).  
+  - The message is encrypted locally.  
+  - The encrypted message packet is transmitted to Receiver.  
+  - Receiver’s app verifies packet integrity.  
+  - Receiver’s app decrypts the message.  
+  - The message is displayed in the chat interface.  
+  - Receiver’s app sends a delivery acknowledgement.  
+  - Sender’s app updates status to “Delivered”.  
+  - Both sides log the message.  
 
 # Non-Functional Requirements
 - The software should have an easy to use gui
