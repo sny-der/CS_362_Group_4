@@ -51,11 +51,24 @@ In order to mitigate these risks we will first ensure that all of our devices ca
 
 # Use Cases
 ## Use Case 1:
-- Users who want to receive files through this software
+Actors: Users who want to receive files through this software
+
+Preconditions: The user has the software downloaded, and has a desire to receive files through this software
+
+Triggers: The user launches the software.
+
+Postcondition: The user views a valid address for their computer, which allows others to connect to them
+
+Steps:
 - The user launches the software
-- The user receives files from another specific user as they desire
-- The user launches the software and is able to view their own address, either through the main display or sub menus, and sends this address to another user, who is able to directly connect to the machine at that address and send the specified files.
-- The user is able to download those files, or is able to send those files to another user
+- The user opens the "Personal Info" submenu
+- The user views their address
+- The user sends this address to someone else with this software
+
+Extensions:
+- The user is able to download files that are sent to them, or send those files to another user
+
+Exception:
 - The user is unable to view their own address, or is unable to be found through the software
 
 ## Use Case 2 - Sending Data
