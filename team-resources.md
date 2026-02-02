@@ -184,6 +184,14 @@ Exceptions: failure conditions and scenarios:
 
 # Software Toolset
 
+## GUI Tools
+
+#### Python Tools
+- [PyQt](https://wiki.python.org/moin/PyQt)
+- [PySide](https://www.pythonguis.com/pyside6/) PyQt extension
+#### HTML/CSS Plugin
+[Electron Framework](https://www.electronjs.org/)
+
 ## Software Design
 
 ### Components 
