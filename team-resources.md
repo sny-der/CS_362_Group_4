@@ -209,6 +209,9 @@ Exceptions: failure conditions and scenarios:
 
 ### Classes / Units of Abstraction
 
+## Coding Guideline
+- Python: [PEP 8](https://realpython.com/python-pep8/#code-layout)
+
 # Team Roles
 
 ## Code Integration Coordinator
