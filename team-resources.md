@@ -184,6 +184,23 @@ Exceptions: failure conditions and scenarios:
 
 # Software Toolset
 
+## Software Design
+
+### Components 
+
+- Packet Assembler & Disassembler - disassembles and reassembles files to and from packets
+- Sender/Receiver - sends and receives packets over networks
+- Address translator - translates local addresses into valid format for transfer protocols
+- GUI - provides interface for user
+
+### Interfaces
+
+### Data
+
+### Alternatives
+
+### Classes / Units of Abstraction
+
 # Team Roles
 
 ## Code Integration Coordinator
