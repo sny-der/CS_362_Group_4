@@ -47,21 +47,31 @@ We will be using a variety of languages to implement the necessary features. The
 
 - App might not work on different operating systems
 
->> Likelihood of Occurring: Medium
->> Impact: Medium
->> Evidence: Different operating systems handle file transfers differently, and resolving those formats could prove challenging to us.
->> Steps: We are researching how to resolve these formats for transfers between different OS, and we plan on testing it by using the app on a different OS
->> Mitigation: The app will be kept Windows-only until we can successfully interact across operating systems.
->> Change from first submission: This requirement and this assessment are new additions for this milestone.
+> Likelihood of Occurring: Medium
+
+> Impact: Medium
+
+> Evidence: Different operating systems handle file transfers differently, and resolving those formats could prove challenging to us.
+
+> Steps: We are researching how to resolve these formats for transfers between different OS, and we plan on testing it by using the app on a different OS
+
+> Mitigation: The app will be kept Windows-only until we can successfully interact across operating systems.
+
+> Change from first submission: This requirement and this assessment are new additions for this milestone.
 
 - App might not be functional in different testing environments
 
->> Likelihood of Occurring: Low
->> Impact: Medium
->> Evidence: Much like the problem with different operating systems, our app might not be functional or compatible with testing environments based on different architecture than our app, and could reduce our capability to test the app
->> Steps: We will identify any testing environments that will work with our app to perform tests
->> Mitigation: We will identify testing environments that will allow for full test coverage of our app, our the cause of incompatibility
->> Change from first submission: This requirement and this assessment are new additions for this milestone.
+> Likelihood of Occurring: Low
+
+> Impact: Medium
+
+> Evidence: Much like the problem with different operating systems, our app might not be functional or compatible with testing environments based on different architecture than our app, and could reduce our capability to test the app
+
+> Steps: We will identify any testing environments that will work with our app to perform tests
+
+> Mitigation: We will identify testing environments that will allow for full test coverage of our app, our the cause of incompatibility
+
+> Change from first submission: This requirement and this assessment are new additions for this milestone.
   
 - Not being able to handle large file transfers 
 - Not being able to resolve local addresses, to establish connections. 
