@@ -256,6 +256,18 @@ A product & requirements lead is necessary to elicit requirements of the softwar
 
 # Schedule
 
+| Task  | Effort  | Dependencies  |
+|---|---|---|
+| Milestone 1  | 1 week  | none |
+|Milestone 2| 1 week | Milestone 1 |
+| Milestone 3  | 2 weeks  |  Milestone 2 |
+| Create Schedule  | 1 day  | Structure  |
+| Design Architecture  | 2 Days  | Requirements  |
+| Create Structure Design  | 2 Days  | Architecture  |
+| Create GUI Mockup  | 1 day  | Structure  |
+| Milestone 4  | 2 weeks  | Milestone 3  |
+|   |   |   |
+
 # Feedback Timing
 
 # Features (WIP)
@@ -290,7 +302,7 @@ It should also be possible for each device to have a public table that tells the
 #### Week 4
 Milestone 3 - Project Architecture and Design
 #### Week 5 
-Milestone 4 - Implementation and Documentation 
+Milestone 4 - Implementation and Documentation
 #### Week 6 
 Milestone 4 - Implemnetation and Documentation
 #### Week 7
