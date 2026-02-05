@@ -45,9 +45,27 @@ We will be using a variety of languages to implement the necessary features. The
 
 # Risks: 
 
-We foresee a problem regarding different operating systems and testing environments. Aside from the problems of common library files, we also have the problem of inter device communication. We will have to ensure that the method of transference works on all devices and between devices.
+- App might not work on different operating systems
 
-In order to mitigate these risks we will first ensure that all of our devices can run the languages and libraries that we are using. We will also be sure that the information transferred does not rely on other software to decipher. With this we will ensure that when problems arise it is possible for us to solve them.
+>> Likelihood of Occurring: Medium
+>> Impact: Medium
+>> Evidence: Different operating systems handle file transfers differently, and resolving those formats could prove challenging to us.
+>> Steps: We are researching how to resolve these formats for transfers between different OS, and we plan on testing it by using the app on a different OS
+>> Mitigation: The app will be kept Windows-only until we can successfully interact across operating systems.
+>> Change from first submission: This requirement and this assessment are new additions for this milestone.
+
+- App might not be functional in different testing environments
+
+>> Likelihood of Occurring: Low
+>> Impact: Medium
+>> Evidence: Much like the problem with different operating systems, our app might not be functional or compatible with testing environments based on different architecture than our app, and could reduce our capability to test the app
+>> Steps: We will identify any testing environments that will work with our app to perform tests
+>> Mitigation: We will identify testing environments that will allow for full test coverage of our app, our the cause of incompatibility
+>> Change from first submission: This requirement and this assessment are new additions for this milestone.
+  
+- Not being able to handle large file transfers 
+- Not being able to resolve local addresses, to establish connections. 
+- Using Python, the GUI could freeze up while the program is processing data to send or receive data
 
 # Use Cases
 ## Use Case 1:
