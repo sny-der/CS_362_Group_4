@@ -237,6 +237,8 @@ Exceptions: failure conditions and scenarios:
 - Main: Handles overall execution of program
 - File Manager: Handles data storage
 
+- [Link to Components Diagram](https://docs.google.com/drawings/d/1WdjOrkrxiTuXHW_l_BpIKTf7qZ1-0r-29KI-O6DZVCI/edit)
+
 ### Interfaces
 - File Manager: Interface between GUI/File Splitter and OS file system. Allows user to select files to upload, and to download files to their machine's storage. 
 - File Splitter/Sender: File splitter passes packets to Sender to send them to the connected user.
