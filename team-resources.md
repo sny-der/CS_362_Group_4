@@ -228,12 +228,13 @@ Exceptions: failure conditions and scenarios:
 ### Components 
 
 - File Splitter - disassembles and reassembles files to and from packets
-- GUI - provides interface for user
+- GUI - provides interface for user, made with PySide/PyQT
 - Sender: Sends packets
 - Receiver: Receives packets
 - Connection Manager: Creates and manages connection between users
 - Location Finder: Finds/translates IP addresses to enable direct connection
 - Main: Handles overall execution of program
+- File Manager: Handles data storage
 
 ### Interfaces
 - File Manager: Interface between GUI/File Splitter and OS file system. Allows user to select files to upload, and to download files to their machine's storage. 
@@ -245,9 +246,17 @@ Exceptions: failure conditions and scenarios:
 - Location Handler/Connection Manager: The location handler will send address information to the Connection Manager to provide the correct target for connection.
 ### Data
 
+- SQLite: The only data we plan on storing long term is contact info for contacts, message logs, and potentially file transfer logs.
+
 ### Alternatives
 
+- TCP v. UDP
+- Electron Framework - can be used to create the GUI instead of python native functions.
+- Encryption protocols
+
+
 ### Classes / Units of Abstraction
+
 
 ## Coding Guideline
 - Python: [PEP 8](https://realpython.com/python-pep8/#code-layout)
