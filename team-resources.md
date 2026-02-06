@@ -222,15 +222,27 @@ Exceptions: failure conditions and scenarios:
 
 ## Software Design
 
+### Architecture Design Pattern
+- Peer-to-peer
+
 ### Components 
 
-- Packet Assembler & Disassembler - disassembles and reassembles files to and from packets
-- Sender/Receiver - sends and receives packets over networks
-- Address translator - translates local addresses into valid format for transfer protocols
+- File Splitter - disassembles and reassembles files to and from packets
 - GUI - provides interface for user
+- Sender: Sends packets
+- Receiver: Receives packets
+- Connection Manager: Creates and manages connection between users
+- Location Finder: Finds/translates IP addresses to enable direct connection
+- Main: Handles overall execution of program
 
 ### Interfaces
-
+- File Manager: Interface between GUI/File Splitter and OS file system. Allows user to select files to upload, and to download files to their machine's storage. 
+- File Splitter/Sender: File splitter passes packets to Sender to send them to the connected user.
+- Receiver/File Splitter: Receiver sends packets to the File Splitter to be recombined.
+- File Splitter/File Manager: File Splitter imports files to split them into packets, and exports recombined files from/to the File Manager.
+- Connection Manager/OS network protocol: The connection manager will use network protocols on the machine to establish and maintain connections with other users
+- Connection Manager/Sender/Receiver: The connection manager will send address information to the sender and receiver to ensure they are sending information to the correct place and receiving it from the correct place.
+- Location Handler/Connection Manager: The location handler will send address information to the Connection Manager to provide the correct target for connection.
 ### Data
 
 ### Alternatives
