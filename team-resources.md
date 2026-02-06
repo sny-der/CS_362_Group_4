@@ -217,6 +217,7 @@ Exceptions: failure conditions and scenarios:
 #### Python Tools
 - [PyQt](https://wiki.python.org/moin/PyQt)
 - [PySide](https://www.pythonguis.com/pyside6/) PyQt extension
+- QT Designer
 #### HTML/CSS Plugin
 - [Electron Framework](https://www.electronjs.org/)
 
