@@ -1,1 +1,1 @@
-This is the repository for P2Ping.
+P2Ping is a direct file transfer system that allows users to directly send and receive files to and from each other over a direct connection, preventing a reliance on external servers and infrastructure.
