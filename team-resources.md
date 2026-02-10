@@ -2,9 +2,17 @@
 # Team Members:
 
 - Charles Weber: Code Integration Coordinator
+    * Ensure all features have interfaces to transfer data between, when necessary
+    * Ensure all components can function concurrently within the same program
 - Abram Gallup: Architecture Design Coordinator
+    * Lead in specifying overall design of the program
+    * Lead in identifying & defining components
 - Jonathan Snyder: QA Coordinator
+    * Ensure program functions correctly
+    * Lead in defining & implementing testing plan
 - Arjun Rahul Bhave: Product & Requirements Coordinator
+    * Lead in identifying functional and nonfunctional requirements
+    * Lead in identifying most desired features
 
 
 # Communication:
@@ -19,31 +27,33 @@ Our primary channel of communication will be discord, and we will have weekly in
 
 # Product description 
 
-# Product Title: P2Ping
+## Product Title: P2Ping
 
-# Abstract: 
-Ever wanted to send large amounts of data from here to there? Well we have. This project will allow users to securely transfer data between computers. Information is transferred bit by bit in units of information called “packets.” While data is being transferred, packets can occasionally go missing or be intercepted by a hostile actor. This program will ensure that all packets arrive securely. Packets that don’t arrive will be resent and “bad” packets sent by malicious actors will be ignored. Once the data transfer is complete, the sender and receiver will be notified.
+## Abstract: 
+P2Ping is a direct file transfer system that establishes a direct connection between computers through the internet in order to transfer files directly between users' computers. Using a direct connection allows P2Ping to prevent a reliance on external servers or storage for file sharing, uses a simple interface to create a low barrier to entry when compared to other decentralized file transfer systems, and is not restricted by physical distance, unlike other direct connection technologies, like Bluetooth.
 
-# Goal: 
+## Goal: 
 
 We aim to create an encrypted p2p messaging/file transfer system that does not require the use of an external server or service to store the data, instead allowing for a direct file transfer between 2 machines.
 
-# Current practice: 
+## Current practice: 
 
-Files are transferred through services like Google Drive, which has restrictions on storage space, and uses a third party server. Torrenting is good for large amounts of data, but is difficult for less technical users to use.
+Files are transferred through services like Google Drive, which has restrictions on storage space, and uses a third party server. Torrenting is good for large amounts of data, but is difficult for less technical users to use. Some other direct connection methods, like scp or ftp, are unsecured and transmit unencrypted traffic. Some other direct connection technologies, like Bluetooth, are restricted by the physical distance between computers.
    
-# Novelty: 
+## Novelty: 
 
-Direct connection between machines.
+- Simple interface for decentralized file transfer system
+- Direct, secure connection unrestricted by physical distance
+- No reliance on external servers or storage
 
-# Effects: 
+## Effects: 
 Peers will be able to directly send encrypted messages without having to use an external server, and without being limited by a third party’s maximum transfer size, enhancing ease and speed of communication and collaboration. 
 
-# Technical approach: 
+## Technical approach: 
 
-We will be using a variety of languages to implement the necessary features. The application that runs the program on the computer will probably be coded in c. Encryption and package management will probably be coded inc c++. Other languages like python or javascript might be used depending on the project requirements.
+The program will use udp transfer protocols, to give us more control over the packets themselves and to allow us to holepunch firewalls or NATs more effectively. Using UDP also allows us to send and receive data without first establishing handshakes or other means of connection, which gives us a lightweight approach to establishing and maintaining connections without relying on external infrastructure. P2Ping will use an encryption protocol based on the Diffie-Hellman protocol, which allows users to generate shared private keys from public keys, which reduces overhead requirements and still results in an acceptable level of security. We will use a simplistic approach to gui, to prevent confusion and to maintain an ease of understanding. 
 
-# Risks: 
+## Risks: 
 
 - App might not work on different operating systems
 
@@ -290,9 +300,21 @@ A product & requirements lead is necessary to elicit requirements of the softwar
 | Create Structure Design  | 2 Days  | Architecture  |
 | Create GUI Mockup  | 1 day  | Structure  |
 | Milestone 4  | 2 weeks  | Milestone 3  |
-|   |   |   |
+| Build basic GUI setup  | 3 days  | GUI Mockup  |
+| Implement Holepunch  | 3 days  |   |
+| Implement Sender  | 3 days  | Holepunch  |
+| Implement Receiver  | 3 days  | Holepunch  |
+| Implement Up/Download Tracker  | 1 day  | Sender/Receiver  |
+| Implement File Shredder  | 1 week  | Structure  |
+| Implement File Recombiner  | 2 days  | File Shredder  |
+| Implement File Manager  | 2 days  | Recombiner  |
+| Implement Encryption  | 1 week  | Shredder/Sender  |
+| Combine all components  | 1-2 weeks  | All previous tasks   |
+| Release Software  | 1-2 weeks  | All previous tasks  |
 
 # Feedback Timing
+
+We will receive feedback from the instructor and TA's after the weekly class sessions, and any actionable feedback will be integrated into the team's goals immediately. All other feedback will be used to guide and shape our development precess. The team will meet immediately after receiving feedback from the instructors or TA's, to determine how best to integrate the feedback into the team goals or the team's development process. 
 
 # Features (WIP)
 
