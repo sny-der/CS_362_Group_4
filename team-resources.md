@@ -265,7 +265,7 @@ Exceptions: failure conditions and scenarios:
    - file transfer logs: file transfer id, file name, file size, timestamp, status (if the          file completely sent, failed, or canceled), sender id, and receiver id.
 
  - High level database schema:
-
+![Relational Schema](images/relational_schema.png)
 
 
 ### Alternatives
