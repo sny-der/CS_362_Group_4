@@ -259,7 +259,14 @@ Exceptions: failure conditions and scenarios:
 - Location Handler/Connection Manager: The location handler will send address information to the Connection Manager to provide the correct target for connection.
 ### Data
 
-- SQLite: The only data we plan on storing long term is contact info for contacts, message logs, and potentially file transfer logs.
+- SQL: Each user will run their own local instance of the database. The database includes the stretch goals, storing:
+   - User Information: user id(stored as a hash of their public key), a user name, and              optionally, a static ip address.
+   - message logs: a message id, the content of the message, timestamp, sender id, and              receiver id.
+   - file transfer logs: file transfer id, file name, file size, timestamp, status (if the          file completely sent, failed, or canceled), sender id, and receiver id.
+
+ - High level database schema:
+
+
 
 ### Alternatives
 
