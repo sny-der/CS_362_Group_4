@@ -323,44 +323,30 @@ A product & requirements lead is necessary to elicit requirements of the softwar
 
 We will receive feedback from the instructor and TA's after the weekly class sessions, and any actionable feedback will be integrated into the team's goals immediately. All other feedback will be used to guide and shape our development precess. The team will meet immediately after receiving feedback from the instructors or TA's, to determine how best to integrate the feedback into the team goals or the team's development process. 
 
-# Features (WIP)
+# Features
 
-Easy to use gui.
-- Should be easy to understand.
-- Should be aesthetic
-- Some toggleable features
+### 1. Easy Discovery of Peers
+- Peers discover each other though a quick message sent via text or other secondary method of communication. 
+- Takes care of the “who/where are you?” without complicated hash tables like ones that Torrents use.
 
-There should be several options for devices to connect to each other.
-- One should be one device to generate a link for the other device to connect to.
-- Another should be sharing one device via the existing software.
+### 2. Easy “one-click” Connection
+- The progam is as conveinent and quick to use as popular 3rd party servers like Google Drive, and Discord by quickly punching through each peer’s firewall, and securing a connection. 
+- To ensure connectivity across heterogeneous network environments, we implement STUN-assisted UDP Hole Punching. This automates the process of 'punching' through NAT firewalls, establishing direct peer-to-peer tunnels without requiring manual router configuration by the user.
 
-Sending and receiving data
-Sending and receiving data directly from the original sender. The system does not use any third party host or server. Connected devices send directly to each other in the form of messages and files. The software can send different file types including large files. The software also has a simple messaging system for small texts and pings that users can send to each other. 
+### 3. Decentralized Data Transfer
+- Sending and receiving data directly from the original sender so that the system does not use any third party host or server. This avoids any unessasry fees that servers like google drive or discord ask for or requrie. 
+- Connected devices send directly to each other in the form of messages and files. The software can send different file types including large files. The software also has a simple messaging system for small texts and pings that users can send to each other.
+- Our transfer engine utilizes a binary chunking protocol to facilitate high-performance, serverless data exchange. By managing data in discrete segments with sequence-verification, we ensure 100% data integrity and optimal memory management during large-scale file transfers.
 
-Encryption.
-- The packets are encrypted and decrypted on the sender and host machines. Any information traversing the internet will not have decipherable data.
-- If a packet goes missing, the receiving device will notice and ask for a resend.
-
-
-
-2+ stretch goals you hope to implement.
+### 4. A Zero Knowledge Handshake
+- All encryption in done behind the scenes with no thought or action by the users.
+- Ensures privacy and peace of mind knowing shared files are stored locally and not constantly on the internet suseptible to online attacks. 
+- We utilize a Diffie-Hellman (ECDH) handshake to establish end-to-end encryption (E2EE) at the session layer. This ensures a 'Zero-Knowledge' architecture where a shared secret is derived locally on each peer, providing Perfect Forward Secrecy for all transmitted data.
 
 
-“Offline” send option. Sender-side Queuing. Have the sender store unsent data and wait until the receiver is online to send. 
-
-It should also be possible for each device to have a public table that tells the other devices how to connect to the other devices. As long as one device is still in the same place and can be found. The other devices can find it and share their new locations.
+### Stretch goals
 
 
-### Term Schedule 
-#### Week 4
-Milestone 3 - Project Architecture and Design
-#### Week 5 
-Milestone 4 - Implementation and Documentation
-#### Week 6 
-Milestone 4 - Implemnetation and Documentation
-#### Week 7
-Milestone 5 - Testing and Implementation
-#### Week 8
-Milestone 6 - Beta Release
-#### Week 9 
-Milestone 7 - Final Release
+1. “Offline” send option. Sender-side Queuing. Have the sender store unsent data and wait until the receiver is online to send. 
+
+2. It should also be possible for each device to perform a "peer exchange" that tells devices how to connect to the other devices. As long as one device is still in the same place and can be found. The other devices can find it and share their new locations.
