@@ -55,37 +55,40 @@ The program will use udp transfer protocols, to give us more control over the pa
 
 ## Risks: 
 
-- App might not work on different operating systems
+- Cross-Platform File Path Inconsistency
 
 > Likelihood of Occurring: Medium
 
 > Impact: Medium
 
-> Evidence: Different operating systems handle file transfers differently, and resolving those formats could prove challenging to us.
+> Evidence: Different operating systems handle file paths differently. MacOS/Linux use forward slashes and case-sensitive filenames, while Windows uses backslashes and is case-insensitive, which can crash file-saving logic.
 
-> Steps: We are researching how to resolve these formats for transfers between different OS, and we plan on testing it by using the app on a different OS
+> Steps: Currently we plan to use Python's pathlib library to handle paths agnostically. 
 
 > Mitigation: The app will be kept Windows-only until we can successfully interact across operating systems.
 
-> Change from first submission: This requirement and this assessment are new additions for this milestone.
+> Change from first submission: This requirement and this assessment are new additions for this deliverable. 
 
-- App might not be functional in different testing environments
+- Networking Environment Variablilty (NAT Types)
 
 > Likelihood of Occurring: Low
 
 > Impact: Medium
 
-> Evidence: Much like the problem with different operating systems, our app might not be functional or compatible with testing environments based on different architecture than our app, and could reduce our capability to test the app
+> Evidence: Some firewalls use Symmetric NAT, which specifically  blocks UDP Hole Punching, preventing a P2P connection even if our code is perfect
 
 > Steps: We will identify any testing environments that will work with our app to perform tests
 
-> Mitigation: We will identify testing environments that will allow for full test coverage of our app, our the cause of incompatibility
+> Mitigation:  We will test across different types (Home Wi-Fi vs. Mobile Hotspot) to document connectivity limits.
 
 > Change from first submission: This requirement and this assessment are new additions for this milestone.
   
-- Not being able to handle large file transfers 
-- Not being able to resolve local addresses, to establish connections. 
-- Using Python, the GUI could freeze up while the program is processing data to send or receive data
+- Cannot imppliment a robust encription algorithm that runs smoothly on the users deivce.
+> 
+- Not being able to resolve local addresses, to establish connections.
+>
+- Main Thread Blocking (GUI Freezing)
+>
 
 # Use Cases
 ## Use Case 1:
