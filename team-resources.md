@@ -353,3 +353,55 @@ We will receive feedback from the instructor and TA's after the weekly class ses
 1. “Offline” send option. Sender-side Queuing. Have the sender store unsent data and wait until the receiver is online to send. 
 
 2. It should also be possible for each device to perform a "peer exchange" that tells devices how to connect to the other devices. As long as one device is still in the same place and can be found. The other devices can find it and share their new locations.
+
+# Testing Plan 
+
+### 1. Unit Testing Strategy
+Focus: Testing individual functions in isolation (no network involved).
+
+- Testing: Cryptographic functions (Key derivation), File Chunking logic, and IP validation regex.
+
+- This is so we can ensure the math and data-handling logic are perfect before adding the unpredictability of a network.
+
+- We will use the PyTest framework to run a suite of "Assert" tests.
+- Example: A unit test will feed a 1MB file into our Chunker and verify that it produces exactly 16 chunks of 64KB, and that the Checksum matches the original.
+
+- Boundary Testing: We will test "Empty File" and "Extremely Large File Name" scenarios to ensure the code doesn't crash on edge cases.
+
+### 2. System (Integration) Testing Strategy
+Focus: Testing the interaction between the Networking, Encryption, and Storage layers.
+
+- Testing: The "Handshake" flow, the NAT traversal success rate, and end-to-end file integrity.
+
+- We want to test this becasue in P2P, bugs can happen when two different computers try to "talk" at the same time.
+
+- We will run two instances of the app on one machine using 127.0.0.1 to test the state machine.
+
+- Virtual Network Simulation: Using tools or multiple laptops to simulate high latency and packet loss. We need to see if our "Chunking" protocol can handle a "dropped" packet without corrupting the whole file.
+
+- Cross-OS Testing: Validating that a file sent from Windows is saved correctly on a Linux/Mac machine (verifying the pathlib mitigation).
+
+### 3. Usability Testing Strategy
+Focus: The human element and the "Zero-Knowledge" requirement.
+
+- Testing: The "One-Click" connection feature and the clarity of the Manual Connection String fallback.
+
+- This is becasue if a user can’t figure out how to share their connection string, the "Easy Discovery" feature has failed.
+
+- Black-Box Testing: We will give the app to a person who has not worked on the code. We will provide them with a peer's connection string and observe if they can establish a connection and send a file without asking the developers for help.
+
+- Latency Perception: Measuring the "time to connect." If the NAT hole-punching takes more than 10 seconds, we need to implement a "Loading" bar to prevent the user from thinking the app is frozen.
+
+### 4. Specific Test Suites
+
+To ensure all core requirements are met, we have identified four specific test suites that map directly to our project features and high-level risks.
+
+| Suite Name | Requirement Mapping | Test Case Description |
+| :--- | :--- | :--- |
+| **Crypto-Validation Suite** | Feature 4: Zero-Knowledge Handshake | **Secret Agreement Verification:** Uses mocked network inputs to ensure Peer A and Peer B derive an identical AES-256 session key via ECDH without ever transmitting the key itself. |
+| **Stream-Integrity Suite** | Feature 3: Binary Chunking Protocol | **Corruption & Sequence Testing:** Simulates a "dropped" data chunk or an out-of-order packet to verify that the binary chunking engine correctly requests re-transmission and maintains file integrity. |
+| **Connectivity-Matrix Suite** | Feature 2: NAT Traversal | **Heterogeneous Network Test:** Validates the STUN-assisted hole punching success rate by testing across different NAT types (e.g., Home Router to 5G Mobile Hotspot). |
+| **Discovery & Fallback Suite** | Feature 1: Peer Discovery | **Re-addressing Persistence:** Simulates a dynamic IP change on one peer and verifies that the system can re-establish the link using the "Manual Connection String" fallback. |
+
+* **Regression Strategy:** These suites will be executed after every major feature merge to ensure that new code (such as UI updates) does not introduce regressions into the sensitive networking or cryptographic layers.
+* **Success Metric:** A test is considered "Passed" only if the SHA-256 hash of the received file perfectly matches the source file hash after being processed through the encryption and chunking pipeline.
