@@ -300,27 +300,37 @@ A product & requirements lead is necessary to elicit requirements of the softwar
 
 # Schedule
 
-| Task  | Effort  | Dependencies  |
-|---|---|---|
-| Milestone 1  | 1 week  | none |
-|Milestone 2| 1 week | Milestone 1 |
-| Milestone 3  | 2 weeks  |  Milestone 2 |
-| Create Schedule  | 1 day  | Structure  |
-| Design Architecture  | 2 Days  | Requirements  |
-| Create Structure Design  | 2 Days  | Architecture  |
-| Create GUI Mockup  | 1 day  | Structure  |
-| Milestone 4  | 2 weeks  | Milestone 3  |
-| Build basic GUI setup  | 3 days  | GUI Mockup  |
-| Implement Holepunch  | 3 days  |   |
-| Implement Sender  | 3 days  | Holepunch  |
-| Implement Receiver  | 3 days  | Holepunch  |
-| Implement Up/Download Tracker  | 1 day  | Sender/Receiver  |
-| Implement File Shredder  | 1 week  | Structure  |
-| Implement File Recombiner  | 2 days  | File Shredder  |
-| Implement File Manager  | 2 days  | Recombiner  |
-| Implement Encryption  | 1 week  | Shredder/Sender  |
-| Combine all components  | 1-2 weeks  | All previous tasks   |
-| Release Software  | 1-2 weeks  | All previous tasks  |
+| Task  | Effort  | Dependencies  | Date|
+|---|---|---|---|
+| Milestone 1  | 1 week  | none | 1/15/26 |
+|Milestone 2| 1 week | Milestone 1 | 1/21/26 |
+| Milestone 3  | 2 weeks  |  Milestone 2 | 2/4/26 |
+| Design Architecture  | 2 Days  | Requirements  | 2/2/26 |
+| Create Structure Design  | 2 Days  | Architecture  | 2/4/26 |
+| Create Schedule  | 1 day  | Structure  | 2/4/26 |
+| Create GUI Mockup  | 1 day  | Structure  | 2/9/26 |
+| Milestone 4  | 2 weeks  | Milestone 3  | 2/18/26 |
+| Build basic GUI setup  | 3 days  | GUI Mockup | 2/20/26 |
+| Implement Holepunch  | 3 days  | Structure  | 2/20/26 |
+| Test Connection Establishment | 1 day | Holepunch | 2/21/26 |
+| Implement Sender  | 3 days  | Holepunch  | 2/24/26 |
+| Implement Receiver  | 3 days  | Holepunch  | 2/24/26 |
+|Test Network Connections | 3 days | Sender/Receiver/Holepunch | 2/27/26 |
+| Implement Up/Download Tracker  | 1 day  | Sender/Receiver  | 2/28/26 |
+| Implement File Shredder  | 1 week  | Structure  | 2/18/26 |
+| Implement File Recombiner  | 2 days  | File Shredder  | 2/20/26 |
+| Milestone 5 | 2 days | Milestone 4 | 2/25/26 |
+| Test Chunking Logic | 3 days | Shredder/Recombiner | 2/23/26 |
+| Implement File Manager  | 2 days  | Recombiner  | 2/26/26 |
+| Test OS Pathing | 2 days | File Manager | 2/28/26 |
+| Implement Encryption  | 4 days  | Shredder/Sender  | 2/26/26 |
+| Test Encryption | 2 days | Encryption | 2/28/26 |
+| Combine all components  | 3 days  | All previous tasks   | 3/2/26 |
+| Milestone 6  | Combine Components | 2 days | 3/3/26 |
+| Test Integration | 3 days | Combine components | 3/6/26 |
+| Test Usability | 2 days | Combine components/Test Integration | 3/5/26 |
+| Finalize P2Ping 1.0 | 1 week  | All previous tasks  | 3/8/26 |
+| Milestone 7 | 2 days | Finalize P2Ping 1.0 | 3/9/26 |
 
 # Feedback Timing
 
