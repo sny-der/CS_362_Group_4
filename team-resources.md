@@ -1,18 +1,18 @@
 # P2Ping
 # Team Members:
 
-- Charles Weber: Code Integration Coordinator
-    * Ensure all features have interfaces to transfer data between, when necessary
-    * Ensure all components can function concurrently within the same program
-- Abram Gallup: Architecture Design Coordinator
-    * Lead in specifying overall design of the program
-    * Lead in identifying & defining components
-- Jonathan Snyder: QA Coordinator
-    * Ensure program functions correctly
-    * Lead in defining & implementing testing plan
-- Arjun Rahul Bhave: Product & Requirements Coordinator
-    * Lead in identifying functional and nonfunctional requirements
-    * Lead in identifying most desired features
+- Charles Weber: Back-end Developer
+    * Design/Implement network connection protocols
+    * Design/Implement Sender/Receiver components
+- Abram Gallup: Back-end Developer
+    * Design/Implement Encryption
+    * Design/Implement Database
+- Jonathan Snyder: Back-end Developer
+    * Design/Implement File Shredder/Recombiner
+    * Design/Implement File Manager
+- Arjun Rahul Bhave: Front-end developer
+    * Design/Implement GUI
+    * Design/Implement Controller component
 
 
 # Communication:
@@ -286,17 +286,17 @@ Exceptions: failure conditions and scenarios:
 
 # Team Roles
 
-## Code Integration Coordinator
-A code integration coordinator is necessary to ensure that all code written by team members works together to create required functionality. Charles is suited to this role because he has experience integrating software.
+## Charles Weber
+Charles is taking on the role of a back-end developer, focusing on network connection and transport protocols. These components are necessary because they form the core functionality of this software. Charles is taking on this role because he has the most experience with network protocols, so he is best suited to this role.
 
-## Architecture Design Coordinator
-An architecture design coordinator is necessary to define a structure for the software, and to ensure the software maintains that structure. Abrum is suited to this role because he has experience designing software structure.
+## Abrum Gallup
+Abrum is taking on the role of a back-end developer, focusing on encryption and databases. These components are necessary because they ensure the safety and continued use of this software. Abrum is the most familiar with these programs, so he is best suited to this role.
 
-## QA Coordinator
-A qa coordinator is necessary to ensure the software performs as desired, and does not have any internal bugs that prevent its operation. Jonathan is suited to this role because he has experience troubleshooting software.
+## Jonathan Snyder
+Jonathan is taking on the role of a back-end developer, focusing on file processing and management. These components are necessary because they allow our software to transmit saved files and to save files to the machine. Jonathan is the most familiar with these programs, so he is best suited to this role.
 
-## Product & Requirements Lead
-A product & requirements lead is necessary to elicit requirements of the software, and to determine the most user friendly methods to fulfill those requirements. Arjun is suited to this role because he has experience determining requirements & user expectations. 
+## Arjun Rahul Bhave
+Arjun is taking on the role of a front-end developer, focusing on creating the GUI and how it interfaces with the rest of the software. These components are necessary because they allow use to provide a simplified user experience, which is one of our main goals. Arjun is the most familiar with GUI creation, so he is best suited to this role.
 
 # Schedule
 
