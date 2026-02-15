@@ -83,12 +83,47 @@ The program will use udp transfer protocols, to give us more control over the pa
 
 > Change from first submission: This requirement and this assessment are new additions for this milestone.
   
-- Cannot imppliment a robust encription algorithm that runs smoothly on the users deivce.
-> 
+- Cannot implement a robust encryption algorithm that runs smoothly on the users deivce.
+
+> Likelihood of Occurring: Unlikely
+  
+> Impact: Low
+
+> Evidence: Encryption algorithms can use a lot of memory, which leads to poor performance and slow processing.
+
+> Steps: We will use the cryptography library, which uses C-bindings for speed.
+
+> Mitigation: We will use chunk-based processing to lower memory usage.
+
+> Change from first submission: This risk and this assessment are new for this submission.
+ 
 - Not being able to resolve local addresses, to establish connections.
->
+
+> Likelihood of Occurring: Possible
+
+> Impact: Medium
+
+> Evidence: Based on the network protocol used, and the network the user is connected to, their IP address can change between app shutdown and startup, or the network port the user can use to send and receive data can be different depending on where they are sending data to.
+
+> Steps: We are using connection and transfer protocols that are more likely to allow users access to the same ports. 
+
+> Mitigation: We will rely on the users using external means to verify each others' address, which also ensures that they are only sending and receiving data to/from who they want to.
+
+> Change from first submission: This risk assessment uses more concrete language to describe the risk and the team's response.
+
 - Main Thread Blocking (GUI Freezing)
->
+
+> Likelihood of Occurring: Likely
+
+> Impact: High
+
+> Evidence: The network and transfer logic could be resource intensive enough to slow down or prevent the UI from functioning, preventing the user from using the app.
+
+> Steps: We will use threading or asyncio libraries to prevent the threads from trying to access the same resource at the same time.
+
+> Mitigation: We can restrict how resource-intensive other threads are, in order to prevent race conditions or thread locking.
+
+> Change from first submission: This risk and assessment are new additions to this submission.
 
 # Use Cases
 ## Use Case 1:
