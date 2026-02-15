@@ -400,6 +400,10 @@ We will receive feedback from the instructor and TA's after the weekly class ses
 
 2. It should also be possible for each device to perform a "peer exchange" that tells devices how to connect to the other devices. As long as one device is still in the same place and can be found. The other devices can find it and share their new locations.
 
+# Documentation Plan
+
+We plan to release a user guide with the system, explaining how to connect to other users, how to upload files, and how to set file paths or names. This will be developed after all components have been integrated, and will be modified after usability testing based on user feedback. We also plan to release dev guides with the software, detailing core components and how they function. This will be developed as each component is completed, which will also enable the team to better understand components they do not create.
+
 # Testing Plan 
 
 ### 1. Unit Testing Strategy
