@@ -318,6 +318,7 @@ Exceptions: failure conditions and scenarios:
 
 ## Coding Guideline
 - Python: [PEP 8](https://realpython.com/python-pep8/#code-layout)
+- To adhere with this guideline, code commits or pull requests will be reviewed by another team member. The author will be notified of any changes that need to be made, or had to be made. 
 
 # Team Roles
 
