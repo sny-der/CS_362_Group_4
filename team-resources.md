@@ -276,14 +276,15 @@ Exceptions: failure conditions and scenarios:
 
 ### Components 
 
-- File Splitter - disassembles and reassembles files to and from packets
+- File Splitter - disassembles and reassembles files to and from chunks, creates index and size of chunks which allows for transmission of files while maintaining direct control of chunks.
 - GUI - provides interface for user, made with PySide/PyQT
-- Sender: Sends packets
-- Receiver: Receives packets
+- Sender: Sends chunks and metadata using UDP protocols.
+- Receiver: Receives metadata and chunks, verifies authenticity of received chunks and unpacks them, requests any missing chunks or packets.
 - Connection Manager: Creates and manages connection between users using UDP connection and transfer protocols
 - Location Finder: Finds/translates IP addresses to enable direct connection
 - Main: Handles overall execution of program
-- File Manager: Handles data storage
+- File Manager: Communicates with OS to set pathing for received files, or to upload files
+- Encryption: Encrypts chunks, utilizes a Diffie-Hellman based algorithm to allow users to generate shared keys.
 
 - [Link to Components Diagram](https://docs.google.com/drawings/d/1WdjOrkrxiTuXHW_l_BpIKTf7qZ1-0r-29KI-O6DZVCI/edit)
 
