@@ -280,7 +280,7 @@ Exceptions: failure conditions and scenarios:
 - GUI - provides interface for user, made with PySide/PyQT
 - Sender: Sends packets
 - Receiver: Receives packets
-- Connection Manager: Creates and manages connection between users
+- Connection Manager: Creates and manages connection between users using UDP connection and transfer protocols
 - Location Finder: Finds/translates IP addresses to enable direct connection
 - Main: Handles overall execution of program
 - File Manager: Handles data storage
@@ -308,9 +308,8 @@ Exceptions: failure conditions and scenarios:
 
 ### Alternatives
 
-- TCP v. UDP
-- Electron Framework - can be used to create the GUI instead of python native functions.
-- Encryption protocols
+- Gluonix designer - platform to build GUIs for python programs. Free to use and license, and has easy to use tools, but it is a little harder to use than Pyside/PyQT.
+- aiortc - python framework designed to handle network connections and transfers. Would be easier to use and implement than using UDP the way we are, but would not allow us the level of control over the protocols that we desire, and could introduce a reliance on external servers to establish and maintain connections.
 
 
 ### Classes / Units of Abstraction
