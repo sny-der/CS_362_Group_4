@@ -125,6 +125,19 @@ The program will use udp transfer protocols, to give us more control over the pa
 
 > Change from first submission: This risk and assessment are new additions to this submission.
 
+- Systems don't have IPv6
+
+> Impact: High
+
+> Evidence: Although IPv6 is a well recognized format, many ISP's don't fully implement it. This is true the most when it comes to large wifi networks in places like universities and hotels.
+
+> Steps: We will make sure our code works with or without a VPN. Many VPNs have ways to get past ISP network restrictions.
+
+> Mitigation: The code will send packets other servers to find its tunneled IP address. The program doesn't need to know if a user is using a vpn or not.
+
+> Change from first submission: Didn't exist yet.
+
+
 # Use Cases
 ## Use Case 1:
 Actors: Users who want to receive files through this software
