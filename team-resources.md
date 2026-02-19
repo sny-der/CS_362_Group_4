@@ -220,6 +220,42 @@ Exceptions: failure conditions and scenarios:
 
 ## Use Case 3
 
+Actors: User A and User B
+
+Preconditions: User A and User B both have the application installed and running. User A and User B are each able to determine their own public-facing address string in the format "[IPv6]:port" by contacting an IPv6 endpoint discovery service (STUN-equivalent). Neither user has an existing saved pairing with the other user.
+
+Triggers: User A and User B decide to pair and exchange their "[IPv6]:port" strings externally (text message, email, discord, etc.), then each user starts the mutual connection procedure in the application.
+
+Postcondition: User A and User B have mutually established a direct P2P communication path by IPv6 UDP firewall hole punching, and the connection is considered ready for encrypted messaging and file transfer without any intermediary server.
+
+Steps:
+- User A launches the software
+- User B launches the software
+- User A opens the menu and copies their "[IPv6]:port"
+- User B opens the menu and copies their "[IPv6]:port"
+- User A sends their "[IPv6]:port" to User B using an external method (text message, etc.)
+- User B sends their "[IPv6]:port" to User A using an external method (text message, etc.)
+- User A opens the "Connect/Pair" submenu and enters/pastes User B’s "[IPv6]:port"
+- User B opens the "Connect/Pair" submenu and enters/pastes User A’s "[IPv6]:port"
+- The app on both devices validates the input format (IPv6 bracket format + port range)
+- The app on both devices begins the mutual firewall hole punching procedure by sending introduction packets to the other user at a fixed interval for a fixed duration (configurable)
+- User A’s app receives an introduction packet from User B and responds with an acknowledgement packet
+- User B’s app receives an introduction packet from User A and responds with an acknowledgement packet
+- User A’s app receives User B’s acknowledgement packet and marks the connection as established
+- User B’s app receives User A’s acknowledgement packet and marks the connection as established
+- The apps perform key agreement and derive shared encryption keys for the session
+- User A saves User B as a contact (optional) and the connection is ready for messaging/file transfer
+- User B saves User A as a contact (optional) and the connection is ready for messaging/file transfer
+
+Extensions:
+- User A and User B can keep the connection alive by sending periodic keepalive packets so the firewall hole remains open during idle periods
+- If either user’s public-facing "[IPv6]:port" changes (network change, VPN toggle), the users can exchange updated strings and rerun the mutual pairing procedure
+
+Exception:
+- Either user is unable to determine their own "[IPv6]:port" and cannot share a valid address string
+- Either user enters an invalid "[IPv6]:port" and the application rejects it
+- Firewall hole punching fails (no packets received within the punching window) and the connection cannot be established
+- Key agreement fails and the connection is not trusted for file transfer
 
 ## Use Case 4
 - Actors  
