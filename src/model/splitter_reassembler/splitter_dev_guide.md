@@ -1,0 +1,5 @@
+split_file uses os to get the path to the uploaded file, and uses chunk to copy 1mb chunks of the selected file into memory before in an array before the metadata for the file (name, size, length of the chunk array, the chunk array) is returned by splitter. 
+reassemble_file writes chunks out of an array passed to it to a file path that is passed to it, iterating through the array until the index has reached its maximum value for the length of the array. 
+Both take the filepath for the file as arguments, so to change the filepath or default locations the argument to each component from whatever function is calling it can be changed to change either the file to be uploaded or the saved location of the file.
+The size of the chunk can be changed by altering the chunk_size variable. It is currently set to 1mb. 
+Currently, splitter_tester contain the driver functions that enable the functions within splitter to run. The variables and format can be modified to change the locations of the files reassembler reassembles, or how split_file is passed files. 
