@@ -10,9 +10,9 @@ print("Selected:", filepath)
 SAVE_DIR = Path("received_files")
 SAVE_DIR.mkdir(exist_ok=True)
 
-safe_name = Path(filepath).name  # strips directory traversal
+file_name = Path(filepath).name  # strips directory traversal
 
-output_path = SAVE_DIR / safe_name
+output_path = SAVE_DIR / file_name
 
 splitter.reassemble_file(splitter.split_file(filepath), output_path)
 
