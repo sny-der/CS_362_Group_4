@@ -10,4 +10,4 @@ The developer documentation should include at least the following information:
 
 ### Custom Libraries
 This project uses extra python libriaries that need to be installed. Use command:
-```pip intall -r requirements.txt```
+```pip install -r requirements.txt```
