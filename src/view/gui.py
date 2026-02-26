@@ -9,7 +9,7 @@ class MessagingApp(ctk.CTk):
         self.geometry("1100x600")
         
         # Set appearance
-        ctk.set_appearance_mode("black")
+        ctk.set_appearance_mode("system")
         
         # Configure Grid
         self.grid_columnconfigure(1, weight=1)
@@ -22,6 +22,7 @@ class MessagingApp(ctk.CTk):
 
         # Header in Sidebar
         self.sidebar_label = ctk.CTkLabel(self.sidebar, text="Messages", 
+                                          text_color="black",
                                          font=ctk.CTkFont(size=22, weight="bold"))
         self.sidebar_label.pack(padx=20, pady=(20, 10), anchor="w")
 
@@ -72,7 +73,8 @@ class MessagingApp(ctk.CTk):
 
         #INSERT LOGIC TO GET IP ADDRESS NEEDED FOR CONNECTIONS
         self.ip_label = ctk.CTkLabel(self.top_bar, text="Your IP: 173.240.196.7", 
-                                    fg_color="#E9ECEF",
+                                    fg_color="#E5E5E5",
+                                    text_color="black",
                                     corner_radius=6,
                                     height=60,
                                     font=ctk.CTkFont(size=13),
@@ -97,6 +99,7 @@ class MessagingApp(ctk.CTk):
         self.icon_label.pack()
 
         self.title_label = ctk.CTkLabel(self.center_container, text="Select a conversation", 
+                                        text_color="#333333",
                                        font=ctk.CTkFont(size=20, weight="bold"))
         self.title_label.pack(pady=(10, 0))
 
