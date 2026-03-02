@@ -21,6 +21,7 @@ No packet protocol changes were made.
 """
 
 from __future__ import annotations
+from gui import messaging_app
 
 import base64
 import os
@@ -315,7 +316,7 @@ def handle_hidden_file_message(payload: str, state: SharedState) -> bool:
     return False
 
 
-def receiver_thread(sock: socket.socket, state: SharedState) -> None:
+def receiver_thread(sock: socket.socket, state: SharedState, view) -> None:
     while True:
         try:
             data, addr = sock.recvfrom(RX_BUFSZ)
@@ -345,6 +346,7 @@ def receiver_thread(sock: socket.socket, state: SharedState) -> None:
 
         if pkt_type == PKT_INFO:
             print(f"\n[info] {payload}\npy> ", end="", flush=True)
+            view.after(0, lambda: view.display_message("Peer", payload))
             if "Closing this bridge" in payload:
                 state.process_should_end = True
             continue
@@ -353,6 +355,7 @@ def receiver_thread(sock: socket.socket, state: SharedState) -> None:
             if is_hidden_file_message(payload) and handle_hidden_file_message(payload, state):
                 continue
             print(f"\npeer> {payload}\npy> ", end="", flush=True)
+            view.after(0, lambda: view.display_message("Peer", payload))
             continue
 
         if pkt_type == PKT_EXIT:
@@ -372,28 +375,53 @@ def wait_for_control_port(state: SharedState, proc: subprocess.Popen) -> int:
     return state.control_port
 
 
-def request_mode_and_endpoint(sock: socket.socket, control_port: int, state: SharedState) -> None:
+def request_mode_and_endpoint(sock: socket.socket, control_port: int, state: SharedState, view) -> None:
     while True:
-        mode = input("Choose mode: local or public? ").strip().lower()
+        # 1. Ask for mode via GUI instead of terminal
+        mode_input = view.get_connection_mode()
+        if not mode_input: continue # Handle cancel/close
+
+        mode = mode_input.strip().lower()
+
         if mode in ("local", "l"):
             state.endpoint_event.clear()
             send_packet(sock, control_port, PKT_MKLOCAL, "")
             state.endpoint_event.wait()
-            other_port = input("Enter the OTHER terminal's port: ").strip()
-            send_packet(sock, control_port, PKT_SETPEER, f"[::1]:{other_port}")
-            print("[python] Local peer configured. Start typing messages.")
+
+            view.after(0, lambda: view.update_ip_display(state.last_endpoint))
+
+            other_port = view.get_peer_address("Enter the OTHER terminal's port:")
+            if other_port:
+                send_packet(sock, control_port, PKT_SETPEER, f"[::1]:{other_port}")
+                view.after(0, lambda: view.show_status("Local peer configured! Start typing."))
+                view.after(0, view.show_chat_ui)
+                view.after(0, lambda: view.show_status("Connected to peer!"))
             return
+        
         if mode in ("public", "p"):
             state.endpoint_event.clear()
             send_packet(sock, control_port, PKT_MKPUB, "")
             state.endpoint_event.wait()
-            print("Share that exact endpoint with the other device.")
-            remote_endpoint = input("Enter the OTHER device's [ipv6]:port: ").strip()
-            send_packet(sock, control_port, PKT_SETPEER, remote_endpoint)
-            print("[python] Public peer configured. Start typing messages.")
-            return
-        print("Please type 'local' or 'public'.")
 
+            view.after(0, lambda: view.update_ip_display(state.last_endpoint))
+
+            remote_endpoint = view.get_peer_address("Enter the OTHER device's [ipv6]:port:")
+            if remote_endpoint:
+                send_packet(sock, control_port, PKT_SETPEER, remote_endpoint.strip())
+                view.after(0, lambda: view.show_status("Public peer configured! Start typing."))
+                view.after(0, view.show_chat_ui)
+                view.after(0, lambda: view.show_status("Connected to peer!"))
+                return
+            
+def send_gui_message(sock, control_port, view):
+    message = view.message_entry.get().strip()
+    if message:
+        # 1. Send to the C bridge
+        send_packet(sock, control_port, PKT_MSG, message)
+        # 2. Display on our own screen
+        view.display_message("You", message)
+        # 3. Clear the input box
+        view.message_entry.delete(0, "end")
 
 def main() -> None:
     py_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
@@ -402,8 +430,11 @@ def main() -> None:
     print(f"[python] listening on [{HOST}]:{py_port}")
     print(f"[python] using C bridge executable: {C_EXE_PATH}")
 
+    # CREATE THE GUI
+    app = messaging_app()
+
     state = SharedState()
-    threading.Thread(target=receiver_thread, args=(py_sock, state), daemon=True).start()
+    threading.Thread(target=receiver_thread, args=(py_sock, state, app), daemon=True).start()
 
     try:
         proc = subprocess.Popen([C_EXE_PATH, str(py_port)])
@@ -419,7 +450,22 @@ def main() -> None:
 
     try:
         control_port = wait_for_control_port(state, proc)
-        request_mode_and_endpoint(py_sock, control_port, state)
+        # request_mode_and_endpoint(py_sock, control_port, state) --- the gui command askes for this now
+
+        def launch_connection():
+            # Using a thread prevents the "Wait" from freezing GUI window
+            threading.Thread(
+                target=request_mode_and_endpoint, 
+                args=(py_sock, control_port, state, app), 
+                daemon=True
+        ).start()
+
+        app.connect_btn.configure(command=launch_connection)
+        # Link the send button
+        app.send_btn.configure(command=lambda: send_gui_message(py_sock, control_port, app))
+        # Allow "Enter" key to send messages
+        app.bind("<Return>", lambda _: send_gui_message(py_sock, control_port, app))
+        app.mainloop()
 
         while True:
             if proc.poll() is not None:
@@ -472,3 +518,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
