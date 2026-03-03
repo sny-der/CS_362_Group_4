@@ -6,8 +6,9 @@ This software will need to compile a C file in the terminal and will need to be 
 - If you don't have the g++ compiler installed, install it [here](https://code.visualstudio.com/docs/cpp/config-mingw) and follow the instructions for adding it to your system path.
 - If you don't have Python installed, please install the latest version [here](https://www.python.org/downloads/)
 - If you don't have customtkinter installed, install it by running the command `pip install customtkinter` in a terminal AFTER installing Python.
-- If you don't have pillow installsed, install it by running the command `pip install pillow` in a terminal AFTER installing Python.
-
+  - You can check if you have custom tkinter installed by running the command `pip show customtkinter` in a terminal. If it is not installed, the terminal will show an error message.
+- If you don't have pillow installed, install it by running the command `pip install pillow` in a terminal AFTER installing Python.
+  - You can check if you have pillow installed by running the command `pip show pillow` in a terminal. If it is not installed, the terminal will show an error message.
 
 1. First clone or download the P2Ping repository to a desired folder. Step by step instructions on how to do this can be found [here](https://docs.github.com/en/get-started/start-your-journey/downloading-files-from-github)
 2. Navigate to the controller directory in a terminal. `path/to/project/folder/src/controller/`
@@ -30,5 +31,5 @@ After you have ran `python WinNetworkMain.py` in the controller directory and th
 5. A chat should open up and you can send messages to each other directly.
 6. Simply exit the program when you are finished messaging each other. You can also end the connection and start a new one with a different peer if desired. 
 
-NOTICE: File sharing and encrytping files and messages is still a work in progess. The contact list on the left side is still a work in progress. Currently messages are not saved. Any messages will be deleted when the application is terminated.
+NOTICE: File sharing and encrypting files and messages is still a work in progess. The contact list on the left side is still a work in progress. Currently messages are not saved. Any messages will be deleted when the application is terminated.
 
