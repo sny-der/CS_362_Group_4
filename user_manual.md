@@ -17,6 +17,8 @@ This software will need to compile a C file in the terminal and will need to be 
 Set up is complete and you are ready to run P2Ping! 
 
 ## How to run P2Ping -- Windows Only
+**Note:** P2Ping requires an IPv6 connection to run properly. You can check if you are using an IPv6 connection [here](https://test-ipv6.com/). If you do not have an IPv6 connection through your current network, you will have to switch to another network that has IPv6 allowed (i.e. mobile hotspot) in order to use P2Ping in its current state.
+
 P2Ping is started through the terminal. Once in the controller directory of the P2Ping folder, run the command:
 - `python WinNetworkMain.py`
 
