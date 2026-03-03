@@ -1,0 +1,7 @@
+be sure to compile the c code with:
+
+gcc -Wall -Wextra -O2 2ipv6test.c -o contest_pybridge.exe -lws2_32
+
+The most important part is the filename.
+
+Use by running the python script.
