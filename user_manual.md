@@ -5,7 +5,8 @@ This software will need to compile a C file in the terminal and will need to be 
 
 - If you don't have the g++ compiler installed, install it [here](https://code.visualstudio.com/docs/cpp/config-mingw) and follow the instructions for adding it to your system path.
 - If you don't have Python installed, please install the latest version [here](https://www.python.org/downloads/)
-- If you don't have customtkinter installed, install it by running the command `pip install customtkinter` in a terminal AFTER installing Python. 
+- If you don't have customtkinter installed, install it by running the command `pip install customtkinter` in a terminal AFTER installing Python.
+- If you don't have pillow installsed, install it by running the command `pip install pillow` in a terminal AFTER installing Python.
 
 
 1. First clone or download the P2Ping repository to a desired folder. Step by step instructions on how to do this can be found [here](https://docs.github.com/en/get-started/start-your-journey/downloading-files-from-github)
