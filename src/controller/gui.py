@@ -1,6 +1,3 @@
-import sys
-print(f"DEBUG: Using Python from {sys.executable}")
-
 import customtkinter as ctk
 from PIL import Image
 
@@ -74,13 +71,18 @@ class messaging_app(ctk.CTk):
         self.top_bar.pack(fill="x", padx=20, pady=10)
 
         # DISPLAY CONNECTION INFORMATION
-        self.ip_label = ctk.CTkLabel(self.top_bar, text="Your IP: Fetching...", 
+        self.ip_label = ctk.CTkTextbox(self.top_bar, 
                                     fg_color="#E9ECEF",
                                     corner_radius=6,
                                     height=60,
                                     font=ctk.CTkFont(size=13),
                                     padx=10)
         self.ip_label.pack(side="left")
+
+        # Insert placeholder text to the IP address box and disable editing
+        self.ip_label.insert("0.0", "Your IP: Fetching...")
+        self.ip_label.bind("<Key>", lambda e: "break" if not (e.state & 0x4 and e.keysym == 'c') else None)
+        self.ip_label.configure(state='normal')
 
         #BUTTON TO CONNECT TO ANOTHER USER
         self.connect_btn = ctk.CTkButton(self.top_bar, 
@@ -130,34 +132,60 @@ class messaging_app(ctk.CTk):
         self.send_btn = ctk.CTkButton(self.input_area, text="Send", width=80)
         self.send_btn.pack(side="right")
 
+        self.file_btn = ctk.CTkButton(self.chat_frame, 
+                               text="📁", 
+                               width=40, 
+                               command=None) #link in WinNetworkMain.py
+        self.file_btn.pack(side="left", padx=5)
+
     def show_chat_ui(self):
         """Hides the empty state and shows the chat window."""
         self.center_container.place_forget() # Remove the 'Select a conversation' UI
         self.chat_frame.pack(fill="both", expand=True) # Show the chat box and input
 
     def update_ip_display(self, endpoint_string):
-            """Call this to change the text of the IP label later."""
-            self.ip_label.configure(text=f"Your IP: {endpoint_string}")
+            """Call this to change the text of the IP label."""
+            self.ip_label.configure(state="normal")
+            self.ip_label.delete("0.0", "end")
+            self.ip_label.insert("0.0", f"Your IP: {endpoint_string}")
+            self.ip_label.configure(state="normal")
 
     def get_connection_mode(self):
         """Asks the user for Local or Public mode."""
         dialog = ctk.CTkInputDialog(text="Type 'local' or 'public':", title="Select Mode")
         return dialog.get_input()
     
-    def get_peer_address(self, prompt_text):
-        """Asks for the peer's port or IP."""
+    def get_peer_address(self, prompt_text, my_ip):
+        """Asks for the peer's port or IP while showing our own IP in the prompt."""
+        # full_prompt = f"Your IP: {my_ip}\n\n {prompt_text}"
         dialog = ctk.CTkInputDialog(text=prompt_text, title="Connect to Peer")
+
+        def copy_to_clipboard():
+            self.clipboard_clear()
+            self.clipboard_append(my_ip)
+            copy_btn.configure(text="Copied!", fg_color="green")
+            # Reset button text after 2 seconds
+            self.after(2000, lambda: copy_btn.configure(text="Copy", fg_color="black"))
+
+        ip_display = ctk.CTkEntry(dialog, width=400, border_width=0, fg_color="transparent")
+        ip_display.insert(0, f"Your IP: {my_ip}")
+        ip_display.configure(state="normal")
+        ip_display.bind("<Key>", lambda e: "break" if not (e.state & 0x4 and e.keysym == 'c') else None)
+        ip_display.grid(row=3, column=0, columnspan=2, pady=10, padx=(20, 5), sticky="w")
+
+        copy_btn = ctk.CTkButton(dialog, text="Copy", width=60, height=24, 
+                               fg_color="black", command=copy_to_clipboard)
+        copy_btn.grid(row=3, column=2, pady=(20, 5), padx=(5, 20), sticky="w")
+
         return dialog.get_input()
 
     def show_status(self, message):
-        """Displays status messages (like 'Public peer configured') in the UI."""
-        # Assuming you have a label for status or just print to a textbox
+        """Displays status messages (like 'Public peer configured') in the UI.""" 
+        # Not implemented yet
         print(f"GUI STATUS: {message}")
-        # If you have a status label: self.status_label.configure(text=message)
 
     def _on_connect_clicked(self):
         """This will be overwritten or assigned by the controller"""
-        print("Button clicked, but no controller logic attached yet.")
 
     def display_message(self, sender, message):
         self.chat_display.configure(state="normal")

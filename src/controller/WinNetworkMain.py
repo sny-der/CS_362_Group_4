@@ -374,12 +374,14 @@ def wait_for_control_port(state: SharedState, proc: subprocess.Popen) -> int:
     assert state.control_port is not None
     return state.control_port
 
-
 def request_mode_and_endpoint(sock: socket.socket, control_port: int, state: SharedState, view) -> None:
     while True:
         # 1. Ask for mode via GUI instead of terminal
         mode_input = view.get_connection_mode()
-        if not mode_input: continue # Handle cancel/close
+        if mode_input is None:
+            print("[python] User cancelled mode selection.")
+            view.after(0, cancel_connection(sock, control_port, state, view)) # Reset the main "Cancel" button back to "Connect"
+            return
 
         mode = mode_input.strip().lower()
 
@@ -390,7 +392,8 @@ def request_mode_and_endpoint(sock: socket.socket, control_port: int, state: Sha
 
             view.after(0, lambda: view.update_ip_display(state.last_endpoint))
 
-            other_port = view.get_peer_address("Enter the OTHER terminal's port:")
+            other_port = view.get_peer_address("Enter the OTHER terminal's port:", state.last_endpoint)
+            
             if other_port:
                 send_packet(sock, control_port, PKT_SETPEER, f"[::1]:{other_port}")
                 view.after(0, lambda: view.show_status("Local peer configured! Start typing."))
@@ -405,7 +408,7 @@ def request_mode_and_endpoint(sock: socket.socket, control_port: int, state: Sha
 
             view.after(0, lambda: view.update_ip_display(state.last_endpoint))
 
-            remote_endpoint = view.get_peer_address("Enter the OTHER device's [ipv6]:port:")
+            remote_endpoint = view.get_peer_address("Enter the OTHER device's [ipv6]:port:", state.last_endpoint)
             if remote_endpoint:
                 send_packet(sock, control_port, PKT_SETPEER, remote_endpoint.strip())
                 view.after(0, lambda: view.show_status("Public peer configured! Start typing."))
@@ -423,6 +426,32 @@ def send_gui_message(sock, control_port, view):
         # 3. Clear the input box
         view.message_entry.delete(0, "end")
 
+def launch_connection(sock: socket.socket, control_port: int, state: SharedState, view):
+            # 1. Change button to "Cancel" mode
+            view.connect_btn.configure(
+            text="Cancel Connection", 
+            fg_color="red", 
+            command=lambda: cancel_connection(sock, control_port, state, view)  #defined below
+            )
+            # 2. Using a thread prevents the "Wait" from freezing GUI window and starts the connection
+            threading.Thread(
+                target=request_mode_and_endpoint, 
+                args=(sock, control_port, state, view), 
+                daemon=True
+            ).start()
+
+def cancel_connection(sock: socket.socket, control_port: int, state: SharedState, view):
+            # 1. Tell background logic to stop (using SharedState)
+            state.process_should_end = True 
+            
+            # 2. Reset the button back to "Connect" mode
+            view.connect_btn.configure(
+                text="Connect to Peers", 
+                fg_color="black", # Default CTK color
+                command=lambda: launch_connection(sock, control_port, state, view)
+            )
+            print("[python] Connection attempt cancelled by user.")
+
 def main() -> None:
     py_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
     py_sock.bind((HOST, 0))
@@ -438,6 +467,7 @@ def main() -> None:
 
     try:
         proc = subprocess.Popen([C_EXE_PATH, str(py_port)])
+        control_port = wait_for_control_port(state, proc)
     except FileNotFoundError:
         print("[python] Could not start the C bridge executable.")
         print("[python] Expected to find it here:")
@@ -449,58 +479,55 @@ def main() -> None:
     print(f"[python] started C bridge pid={proc.pid}")
 
     try:
-        control_port = wait_for_control_port(state, proc)
         # request_mode_and_endpoint(py_sock, control_port, state) --- the gui command askes for this now
 
-        def launch_connection():
-            # Using a thread prevents the "Wait" from freezing GUI window
-            threading.Thread(
-                target=request_mode_and_endpoint, 
-                args=(py_sock, control_port, state, app), 
-                daemon=True
-        ).start()
 
-        app.connect_btn.configure(command=launch_connection)
-        # Link the send button
-        app.send_btn.configure(command=lambda: send_gui_message(py_sock, control_port, app))
-        # Allow "Enter" key to send messages
-        app.bind("<Return>", lambda _: send_gui_message(py_sock, control_port, app))
-        app.mainloop()
+        # --- GUI CALLBACKS ---
 
-        while True:
-            if proc.poll() is not None:
-                print("[python] C bridge has exited.")
-                break
-            if state.process_should_end:
-                print("[python] Session is ending.")
-                break
+        def handle_file_transfer():
+            chosen = open_file_picker()
+            if not chosen:
+                print("[python] No file selected.")
+            if not os.path.isfile(chosen):
+                print("[python] Selected path is not a regular file.")
 
-            line = input("py> ").strip()
+            try:
+                # Run file sending in a thread so the GUI doesn't "freeze" during large transfers
+                threading.Thread(target=send_file_over_existing_link, 
+                                 args=(py_sock, control_port, chosen), 
+                                 daemon=True).start()
+            except Exception as exc:
+                print(f"[python] File send failed: {exc}")
 
-            if line == "exit":
+        def on_closing():
+            # Send the exit packet to the C bridge before killing the app
+            try:
                 send_packet(py_sock, control_port, PKT_EXIT, "")
                 time.sleep(0.25)
-                break
+            except:
+                pass
+            app.quit()
+            app.destroy()
 
-            if line == "/quit":
-                print("[python] quitting Python controller without sending EXIT to peer.")
-                break
+        app.protocol("WM_DELETE_WINDOW", on_closing)
 
-            if line == "file":
-                chosen = open_file_picker()
-                if not chosen:
-                    print("[python] No file selected.")
-                    continue
-                if not os.path.isfile(chosen):
-                    print("[python] Selected path is not a regular file.")
-                    continue
-                try:
-                    send_file_over_existing_link(py_sock, control_port, chosen)
-                except Exception as exc:
-                    print(f"[python] File send failed: {exc}")
-                continue
+        # Link the connect to peers button
+        app.connect_btn.configure(command=lambda: launch_connection(py_sock, control_port, state, app))
+        # Link the send and add file button
+        app.send_btn.configure(command=lambda: send_gui_message(py_sock, control_port, app))
+        app.file_btn.configure(command=handle_file_transfer)
+        # Allow "Enter" key to send messages
+        app.bind("<Return>", lambda _: send_gui_message(py_sock, control_port, app))
+        
 
-            send_packet(py_sock, control_port, PKT_MSG, line)
+        if proc.poll() is not None:
+                print("[python] C bridge has exited.")
+
+        if state.process_should_end:
+            print("[python] Session is ending.")
+
+        app.mainloop()
+
 
     finally:
         try:
@@ -514,6 +541,8 @@ def main() -> None:
                 proc.wait(timeout=2)
             except subprocess.TimeoutExpired:
                 proc.kill()
+    
+    print("[python] Mainloop ended. Finalizing process termination.")
 
 
 if __name__ == "__main__":
