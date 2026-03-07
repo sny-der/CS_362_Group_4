@@ -21,7 +21,7 @@ No packet protocol changes were made.
 """
 
 from __future__ import annotations
-from gui import messaging_app
+from view.gui import messaging_app
 
 import base64
 import os
