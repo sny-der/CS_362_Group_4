@@ -7,7 +7,8 @@ A Windows machine, Python, and the Python libraries customtkinter and Pillow are
   - You can check if you have pillow installed by running the command `pip show pillow` in a terminal. If it is not installed, the terminal will show an error message.
 
 1. First clone or download the P2Ping repository to a desired folder. Step by step instructions on how to do this can be found [here](https://docs.github.com/en/get-started/start-your-journey/downloading-files-from-github)
-2. You can run P2Ping from the .exe included in the controller folder in the src directory for P2Ping. For ease of access, you can create a shortcut to the file by right clicking on it, selecting "Show more options", then selecting "Send to" and then selecting desktop which will create a desktop shortcut for the file.
+2. If you do not have the required libraries, navigate to the directory where P2Ping is installed in a terminal by using `cd <your_path>` where your_path is replaced by the filepath to where P2Ping is installed on your machine, and then enter the command `pip install -r requirements.txt`. 
+3. You can run P2Ping from the .exe included in the controller folder in the src directory for P2Ping. For ease of access, you can create a shortcut to the file by right clicking on it, selecting "Show more options", then selecting "Send to" and then selecting desktop which will create a desktop shortcut for the file.
 
 
 Set up is complete and you are ready to run P2Ping! 
