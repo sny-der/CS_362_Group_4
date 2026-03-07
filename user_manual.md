@@ -1,5 +1,3 @@
-P2Ping is a direct file transfer system that allows users to directly send and receive files to and from each other over a direct connection. Using a direct connection allows P2Ping to prevent a reliance on external servers or storage for file sharing, uses a simple interface to create a low barrier to entry when compared to other decentralized file transfer systems, and is not restricted by physical distance, unlike other direct connection technologies, like Bluetooth.
-
 ## Installing P2Ping -- Windows Only 
 A Windows machine, Python, and the Python libraries customtkinter and Pillow are needed to run this program.
 
