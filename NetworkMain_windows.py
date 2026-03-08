@@ -199,13 +199,13 @@ def _ensure_c_executable() -> bool:
         if shutil.which("gcc") is not None and _build_with_gcc():
             return True
         _print_problem(
-            "No suitable C compiler found. Install either:
+            """No suitable C compiler found. Install either:
 "
             "  - Visual Studio Build Tools (cl.exe), or
 "
             "  - MinGW-w64 (gcc.exe)
 "
-            "Then rerun."
+            "Then rerun."""
         )
         return False
 

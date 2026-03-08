@@ -8,6 +8,10 @@ The developer documentation should include at least the following information:
 - How to build a release of the software. Describe any tasks that are not automated. For example, should a developer update a version number (in code and documentation) prior to invoking the build system? Are there any sanity checks a developer should perform after building a release?
 
 
+### For re-compling the C code
+The c file "2ipv6test_windows.c" is complied with this command:
+- ```gcc -Wall -Wextra -O2 2ipv6test_windows.c -o contest_pybridge.exe -lws2_32 -lbcrypt```
+
 ### Custom Libraries
 This project uses extra python libriaries that need to be installed. Use command:
 ```pip install -r requirements.txt```

@@ -1,97 +1,102 @@
 #if defined(_WIN32)
+    #define WIN32_LEAN_AND_MEAN
+    #define _CRT_RAND_S // For rand_s on Windows. It's still a secure RNG, just with a different API.
 
-#define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <windows.h>
 
-#include <bcrypt.h>
-#include <direct.h>
-#include <errno.h>
-#include <io.h>
-#include <process.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <time.h>
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #include <windows.h>
 
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "bcrypt.lib")
+    #include <bcrypt.h>
+    #include <direct.h>
+    #include <errno.h>
+    #include <io.h>
+    #include <process.h>
+    #include <stdint.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <sys/stat.h>
+    #include <time.h>
 
-typedef SOCKET sock_t;
-typedef int socklen_t;
 
-#ifndef F_OK
-#define F_OK 0
-#endif
+    #pragma comment(lib, "ws2_32.lib")
+    #pragma comment(lib, "bcrypt.lib")
 
-static void perror_sock(const char *msg) {
-    int e = WSAGetLastError();
-    fprintf(stderr, "%s: WSA error %d\n", msg, e);
-}
+    typedef SOCKET sock_t;
+    typedef int socklen_t;
 
-#define SOCK_INVALID INVALID_SOCKET
-#define close_sock(s) closesocket(s)
+    #ifndef F_OK
+        #define F_OK 0
+    #endif
+    
 
-static void sleep_us(unsigned int us) { Sleep((us + 999U) / 1000U); }
-static void sleep_ms(unsigned int ms) { Sleep(ms); }
 
-typedef struct _stat64 stat_t;
-static int stat_path(const char *p, stat_t *st) { return _stat64(p, st); }
-static int access_path(const char *p, int mode) { return _access(p, mode); }
-static int mkdir_path(const char *p, int mode_unused) { (void)mode_unused; return _mkdir(p); }
+    static void perror_sock(const char *msg) {
+        int e = WSAGetLastError();
+        fprintf(stderr, "%s: WSA error %d\n", msg, e);
+    }
 
-#define fseeko _fseeki64
-#define ftello _ftelli64
+    #define SOCK_INVALID INVALID_SOCKET
+    #define close_sock(s) closesocket(s)
 
-#ifndef S_ISDIR
-#define S_ISDIR(m) (((m) & _S_IFMT) == _S_IFDIR)
-#endif
-#ifndef S_ISREG
-#define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
-#endif
+    static void sleep_us(unsigned int us) { Sleep((us + 999U) / 1000U); }
+    static void sleep_ms(unsigned int ms) { Sleep(ms); }
 
-#define PATH_SEP '\\'
+    typedef struct _stat64 stat_t;
+    static int stat_path(const char *p, stat_t *st) { return _stat64(p, st); }
+    static int access_path(const char *p, int mode) { return _access(p, mode); }
+    static int mkdir_path(const char *p, int mode_unused) { (void)mode_unused; return _mkdir(p); }
 
-#else
+    #define fseeko _fseeki64
+    #define ftello _ftelli64
 
-#define _GNU_SOURCE
+    #ifndef S_ISDIR
+    #define S_ISDIR(m) (((m) & _S_IFMT) == _S_IFDIR)
+    #endif
+    #ifndef S_ISREG
+    #define S_ISREG(m) (((m) & _S_IFMT) == _S_IFREG)
+    #endif
 
-#include <arpa/inet.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <ifaddrs.h>
-#include <limits.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/select.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <time.h>
-#include <unistd.h>
+    #define PATH_SEP '\\'
 
-typedef int sock_t;
-#define SOCK_INVALID (-1)
-#define close_sock(s) close(s)
+#else // Non-Windows (Linux/macOS) includes go here:
 
-static void sleep_us(unsigned int us) { usleep(us); }
-static void sleep_ms(unsigned int ms) { usleep(ms * 1000U); }
+    #define _GNU_SOURCE
 
-#define perror_sock perror
+    #include <arpa/inet.h>
+    #include <errno.h>
+    #include <fcntl.h>
+    #include <ifaddrs.h>
+    #include <limits.h>
+    #include <netdb.h>
+    #include <netinet/in.h>
+    #include <stdint.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <sys/select.h>
+    #include <sys/socket.h>
+    #include <sys/stat.h>
+    #include <sys/time.h>
+    #include <time.h>
+    #include <unistd.h>
 
-typedef struct stat stat_t;
-static int stat_path(const char *p, stat_t *st) { return stat(p, st); }
-static int access_path(const char *p, int mode) { return access(p, mode); }
-static int mkdir_path(const char *p, int mode) { return mkdir(p, (mode_t)mode); }
+    typedef int sock_t;
+    #define SOCK_INVALID (-1)
+    #define close_sock(s) close(s)
 
-#define PATH_SEP '/'
+    static void sleep_us(unsigned int us) { usleep(us); }
+    static void sleep_ms(unsigned int ms) { usleep(ms * 1000U); }
+
+    #define perror_sock perror
+
+    typedef struct stat stat_t;
+    static int stat_path(const char *p, stat_t *st) { return stat(p, st); }
+    static int access_path(const char *p, int mode) { return access(p, mode); }
+    static int mkdir_path(const char *p, int mode) { return mkdir(p, (mode_t)mode); }
+
+    #define PATH_SEP '/'
 
 #endif
 
@@ -298,8 +303,13 @@ static int send_typed_packet_data(sock_t sock,
         memcpy(buf + type_len, payload, payload_len);
     }
 
-    int sent = (int)sendto(sock, buf, type_len + payload_len, 0,
-                          (const struct sockaddr *)to, sizeof(*to));
+    int sent = (int)sendto(sock, 
+                            (const char *)buf, 
+                            type_len + payload_len, 
+                            0,
+                            (const struct sockaddr *)to, 
+                            sizeof(*to));
+
     return (sent == (ssize_t)(type_len + payload_len)) ? 0 : -1;
 }
 
@@ -323,7 +333,7 @@ static int recv_typed_packet(sock_t sock,
                              struct sockaddr_in6 *from,
                              socklen_t *fromlen) {
     uint8_t buf[PEER_RX_BUFSZ];
-    int n = (int)recvfrom(sock, buf, sizeof(buf), 0, (struct sockaddr *)from, fromlen);
+    int n = (int)recvfrom(sock, (char *)buf, sizeof(buf), 0, (struct sockaddr *)from, fromlen);
     if (n < 0) return -1;
     if ((size_t)n < type_len) {
         errno = EPROTO;
@@ -500,7 +510,7 @@ static int stun_ipv6_mapped_on_socket(sock_t s,
     memcpy(req + 8, txid, sizeof(txid));
 
     for (int attempt = 0; attempt < 3; attempt++) {
-        if (sendto(s, req, sizeof(req), 0,
+        if (sendto(s, (const char *)req, sizeof(req), 0,
                    (const struct sockaddr *)stun_addr, sizeof(*stun_addr)) != (ssize_t)sizeof(req)) {
             continue;
         }
@@ -519,7 +529,7 @@ static int stun_ipv6_mapped_on_socket(sock_t s,
         uint8_t resp[1500];
         struct sockaddr_in6 from;
         socklen_t from_len = sizeof(from);
-        int n = (int)recvfrom(s, resp, sizeof(resp), 0, (struct sockaddr *)&from, &from_len);
+        int n = (int)recvfrom(s, (char *)resp, sizeof(resp), 0, (struct sockaddr *)&from, &from_len);
         if (n < 20) continue;
 
         uint16_t msg_type = read_be16(resp + 0);
@@ -1247,6 +1257,6 @@ int main(int argc, char **argv) {
 
     incoming_file_cleanup(&st.incoming_file);
     close_peer_socket_if_open(&st);
-    if (st.control_sock >= 0) close_sock(st.control_sock);
+    if (st.control_sock != SOCK_INVALID) close_sock(st.control_sock);
     return rc;
 }
