@@ -1221,7 +1221,7 @@ static void sender_send_current_transfer(app_state_t *st) {
 }
 
 /* ============================== Incoming transfer (bitmap + SetFilePointerEx/WriteFile) ============================== */
- (bitmap + SetFilePointerEx/WriteFile) ============================== */
+/* ============================== (bitmap + SetFilePointerEx/WriteFile) ============================== */
 
 static void incoming_clear_locked(incoming_transfer_t *in) {
     if (in->hfile && in->hfile != INVALID_HANDLE_VALUE) CloseHandle(in->hfile);

@@ -4,7 +4,7 @@ from __future__ import annotations
 import threading
 import time
 
-import NetworkMain_windows as bridge
+import model.NetworkMain_windows as bridge
 
 
 class Poller:
