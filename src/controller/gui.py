@@ -29,6 +29,19 @@ class messaging_app(ctk.CTk):
         self.search_bar = ctk.CTkEntry(self.sidebar, placeholder_text="🔍 Search conversations...",
                                       height=35, fg_color="#E9ECEF", border_width=0)
         self.search_bar.pack(padx=20, pady=10, fill="x")
+        
+        self.title("Contacts")
+        self.entries = []
+        
+        # Input area to add new contacts (prototype, does not yet connect to real contacts)
+        input_frame = ctk.CTkFrame(self.sidebar)
+        input_frame.pack(fill="x", padx=20, pady=10)
+        self.user_input = ctk.CTkEntry(input_frame, placeholder_text="Name", height=35)
+        self.user_input.pack(side="left", fill="x", expand=True)
+        add_btn = ctk.CTkButton(input_frame, text="Add", width=60, command=lambda: self.add_contact())
+        add_btn.pack(side="right", padx=(10, 0))
+        self.container = ctk.CTkFrame(self.sidebar)
+        self.container.pack(fill="both", expand=True, padx=20, pady=(0, 20))
 
         # Mock Conversation List
         contacts = [
@@ -192,6 +205,18 @@ class messaging_app(ctk.CTk):
         self.chat_display.insert("end", f"{sender}: {message}\n")
         self.chat_display.configure(state="disabled")
         self.chat_display.see("end")
+    def add_contact(self): # Prototype for adding contacts. Does not yet fill the sidebar with real contacts or connect to them.
+            entry_text = self.user_input.get()
+            if entry_text:
+                row_frame = ctk.CTkFrame(self.container)
+                row_frame.pack(fill="x", pady=2)
+                entry_label = ctk.CTkEntry(row_frame)
+                entry_label.insert(0, entry_text)
+                entry_label.pack(fill="x", padx=5, expand=True)
+                lbtn = ctk.CTkButton(row_frame, text="X", width=80, command=lambda: row_frame.destroy())
+                lbtn.pack(side="right", padx=(10, 0))
+                self.entries.append((entry_label, row_frame))
+                self.user_input.delete(0, "end")
 
 if __name__ == "__main__":
     app = messaging_app()
