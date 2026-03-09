@@ -1,3 +1,7 @@
 This file will explain how the python and c files work along with how to use them.
 
 WIP -Charles
+
+How it Works:
+
+How to Use: 
