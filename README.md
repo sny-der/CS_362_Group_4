@@ -2,4 +2,4 @@ P2Ping is a direct file transfer system that allows users to directly send and r
 
 - To build and run the system please refer to the usr_manual.md file located in the project directory. You can also find it [here](https://github.com/sny-der/CS_362_Group_4/blob/main/user_manual.md)
 
-- Use Cases 1, 3 and 4 are operational and are expected to be tested. Use cases 2 is still a work in progress. Simplified step by step instructions for these use cases are in the [user_manaul.md](https://github.com/sny-der/CS_362_Group_4/blob/main/user_manual.md) file. The more detailed use cases can be found in the team-resources.md file in the project directory [here](https://github.com/sny-der/CS_362_Group_4/blob/main/team-resources.md)
+- Use Cases 1, 2, 3, and 4 are operational. Simplified step by step instructions for these use cases are in the [user_manaul.md](https://github.com/sny-der/CS_362_Group_4/blob/main/user_manual.md) file. The more detailed use cases can be found in the team-resources.md file in the project directory [here](https://github.com/sny-der/CS_362_Group_4/blob/main/team-resources.md)
