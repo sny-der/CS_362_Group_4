@@ -1,0 +1,5 @@
+python_loopback=
+control_loopback=
+shareable_endpoint=
+mode=
+pid=

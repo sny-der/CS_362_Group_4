@@ -1,3 +1,0 @@
-
-
-# placeholder for controller directory
