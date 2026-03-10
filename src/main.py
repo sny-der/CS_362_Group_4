@@ -63,13 +63,9 @@ def setup_gui_logic(app):
         if file_path:
             # Call your bridge function to send the file
             # Assuming bridge.send_file(path) exists in NetworkMain_windows.py
-            result = bridge.send_file(file_path)
-            
-            if result and not str(result).startswith("ERROR"):
-                file_name = file_path.split("/")[-1] # Get just the name
-                app.display_message("You", f"Sent file: {file_name}")
-            else:
-                app.display_message("System", "Error: Failed to send file.")
+            bridge.send_file(file_path)
+            file_name = file_path.split("/")[-1] # Get just the name
+            app.display_message("You", f"Sent file: {file_name}")
 
     # Link to  button
     app.file_btn.configure(command=handle_file_selection)
