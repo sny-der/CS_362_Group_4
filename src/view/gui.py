@@ -137,7 +137,6 @@ class messaging_app(ctk.CTk):
         self.message_entry = ctk.CTkEntry(self.input_area, placeholder_text="Type a message...")
         self.message_entry.pack(side="left", fill="x", expand=True, padx=(0, 10))
 
-        # Action Buttons (File & Clear)
         self.action_bar = ctk.CTkFrame(self.chat_frame, fg_color="transparent")
         self.action_bar.pack(fill="x", padx=20)
 
@@ -215,6 +214,20 @@ class messaging_app(ctk.CTk):
         self.chat_display.insert("end", f"{sender}: {message}\n")
         self.chat_display.configure(state="disabled")
         self.chat_display.see("end")
+
+    def update_button_to_connected(self):
+        self.connect_btn.configure(
+            text="End Connection",
+            fg_color="#8B0000",     # Dark Red
+            hover_color="#FF0000"   # Bright Red
+        )
+        
+    def update_button_to_disconnect(self):
+        self.connect_btn.configure(
+             text="Connect to Peers",
+             fg_color="black",
+             hover_color="#2b2b2b"
+        )
 
     # Prototype for adding contacts. Currently not implemented in program.   
     def add_contact(self): # Prototype for adding contacts. Does not yet fill the sidebar with real contacts or connect to them.
