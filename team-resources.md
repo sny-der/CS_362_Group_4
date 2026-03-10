@@ -139,7 +139,7 @@ The program will use udp transfer protocols, to give us more control over the pa
 
 
 # Use Cases
-## Use Case 1:
+## Use Case 1 - Viewing Your Own IP Address:
 Actors: Users who want to receive files through this software
 
 Preconditions: The user has the software downloaded, and has a desire to receive files through this software
@@ -150,9 +150,10 @@ Postcondition: The user views a valid address for their computer, which allows o
 
 Steps:
 - The user launches the software
-- The user opens the "Personal Info" submenu
-- The user views their address
-- The user sends this address to someone else with this software
+- The user clicks the "Connect to Peers" button on the top right of the application window. 
+- The user selects public or local
+- The user views their address next to "Your IP:"
+- The user copies and sends this address to someone else with this software through an external service (text, email, discord, etc.)
 
 Extensions:
 - The user is able to download files that are sent to them, or send those files to another user
@@ -160,7 +161,7 @@ Extensions:
 Exception:
 - The user is unable to view their own address, or is unable to be found through the software
 
-## Use Case 2 - Sending Data
+## Use Case 2 - Sending a File
 
 Actors: The user sending data, and the user receiving data.
 
@@ -218,7 +219,7 @@ Exceptions: failure conditions and scenarios:
 - Insufficient Storage / Space on Receiver: Receiver app rejects incoming transfer, notifies     Sender (“Receiver has insufficient space”)
 - Sender Cancels Mid-Transfer: Transfer aborts gracefully, partial data discarded on both        sides, Sender sees “Canceled”. 
 
-## Use Case 3
+## Use Case 3 - Connecting to Peers
 
 Actors: User A and User B
 
@@ -231,21 +232,27 @@ Postcondition: User A and User B have mutually established a direct P2P communic
 Steps:
 - User A launches the software
 - User B launches the software
-- User A opens the menu and copies their "[IPv6]:port"
-- User B opens the menu and copies their "[IPv6]:port"
+- User A clicks the "Connect to Peers" button on the top right of the application window. 
+- User B clicks the "Connect to Peers" button on the top right of the application window. 
+- User A selects public or local
+- User B selects public or local
+- User A views their address next to "Your IP:"
+- User B views their address next to "Your IP:"
+- User A copies their "[IPv6]:port"
+- User B copies their "[IPv6]:port"
 - User A sends their "[IPv6]:port" to User B using an external method (text message, etc.)
 - User B sends their "[IPv6]:port" to User A using an external method (text message, etc.)
-- User A opens the "Connect/Pair" submenu and enters/pastes User B’s "[IPv6]:port"
-- User B opens the "Connect/Pair" submenu and enters/pastes User A’s "[IPv6]:port"
+- User A enters/pastes User B’s "[IPv6]:port" in the text box on the pop up window. 
+- User B enters/pastes User A’s "[IPv6]:port" in the text box on the pop up window.
 - The app on both devices validates the input format (IPv6 bracket format + port range)
 - The app on both devices begins the mutual firewall hole punching procedure by sending introduction packets to the other user at a fixed interval for a fixed duration (configurable)
 - User A’s app receives an introduction packet from User B and responds with an acknowledgement packet
 - User B’s app receives an introduction packet from User A and responds with an acknowledgement packet
 - User A’s app receives User B’s acknowledgement packet and marks the connection as established
 - User B’s app receives User A’s acknowledgement packet and marks the connection as established
-- The apps perform key agreement and derive shared encryption keys for the session
-- User A saves User B as a contact (optional) and the connection is ready for messaging/file transfer
-- User B saves User A as a contact (optional) and the connection is ready for messaging/file transfer
+- The apps perform key agreement and derive shared encryption keys for the session (work in progress NOT operational)
+- User A saves User B as a contact (optional) and the connection is ready for messaging/file transfer (work in progress NOT operational)
+- User B saves User A as a contact (optional) and the connection is ready for messaging/file transfer (work in progress NOT operational)
 
 Extensions:
 - User A and User B can keep the connection alive by sending periodic keepalive packets so the firewall hole remains open during idle periods
@@ -257,44 +264,43 @@ Exception:
 - Firewall hole punching fails (no packets received within the punching window) and the connection cannot be established
 - Key agreement fails and the connection is not trusted for file transfer
 
-## Use Case 4
+## Use Case 4 - Chatting with Peers
 - Actors  
   - Sender (User initiating the message)  
   - Receiver (User receiving the message)  
 
 - Triggers  
-  - Sender opens a chat window or selects a contact and types a message or sends a “ping.”  
+  - Sender clicks on the "Connect to Peers" button on the top right side of the window.  
 
 - Preconditions  
   - Both Sender and Receiver have the application installed.  
-  - Sender and Receiver are added as contacts.  
-  - Sender has selected the Receiver.  
   - Receiver is either online, or offline messaging is enabled (stretch goal).  
   - A secure P2P connection can be established or resumed.  
 
 - Postconditions  
-  - The message is delivered end-to-end encrypted from Sender to Receiver.  q
+  - The message is delivered end-to-end encrypted (Work in Progress NOT operational) from Sender to Receiver. 
   - Receiver can read the decrypted message.  
   - Sender receives delivery or read confirmation (if enabled).  
-  - Message logs are stored locally for both users.  
+  - Message logs are stored locally for both users. (stretch goal)
   - No third-party server stores or accesses the message contents.  
 
 - Main Success Scenario
-  - Sender opens the application.  
-  - Sender selects a Receiver from the contact list.  
-  - Sender types a text message or presses a “Ping” button.  
-  - The app generates message metadata (timestamp, sender ID, message ID).  
-  - The app checks Receiver’s online status.  
-  - The app establishes or reuses an encrypted P2P connection.  
-  - The app performs secure key agreement (if not already active).  
-  - The message is encrypted locally.  
-  - The encrypted message packet is transmitted to Receiver.  
-  - Receiver’s app verifies packet integrity.  
-  - Receiver’s app decrypts the message.  
-  - The message is displayed in the chat interface.  
-  - Receiver’s app sends a delivery acknowledgement.  
-  - Sender’s app updates status to “Delivered”.  
-  - Both sides log the message.  
+  - Sender opens the application.
+  - Receiver opens the application.
+  - Sender clicks the "Connect to Peers" button on the top right of the application window.
+  - Sender selects public or local
+  - Sender copies their "[IPv6]:port"
+  - Sender sends their "[IPv6]:port" to the reciever using an external method (text message, etc.)
+  - Receiver clicks the "Connect to Peers" button on the top right of the application window.
+  - Receiver selects public or local
+  - Receiver copies their "[IPv6]:port"
+  - Receiver sends their "[IPv6]:port" to the sender using an external method (text message, etc.)
+  - The app establishes or reuses a P2P connection.
+  - The chat interface opens and can be seen by the sender and receiver.      
+  - Message packet is transmitted to Receiver.     
+  - The message is displayed in the chat interface.
+  - Sender and receiver continue to send and receive messages to each other.
+  - The messages continue to display in the chat interface. 
 
 # Non-Functional Requirements
 - The software should have an easy to use gui
