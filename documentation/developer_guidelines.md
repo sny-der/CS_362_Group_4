@@ -19,3 +19,12 @@ This project uses extra python libriaries that need to be installed. Use command
 ## Splitter Component
 
 split_file uses os to get the path to the uploaded file, and uses chunk to copy 1mb chunks of the selected file into memory before in an array before the metadata for the file (name, size, length of the chunk array, the chunk array) is returned by splitter. reassemble_file writes chunks out of an array passed to it to a file path that is passed to it, iterating through the array until the index has reached its maximum value for the length of the array. Both take the filepath for the file as arguments, so to change the filepath or default locations the argument to each component from whatever function is calling it can be changed to change either the file to be uploaded or the saved location of the file. The size of the chunk can be changed by altering the chunk_size variable. It is currently set to 1mb. Currently, splitter_tester contain the driver functions that enable the functions within splitter to run. The variables and format can be modified to change the locations of the files reassembler reassembles, or how split_file is passed files.
+
+## Contest_pybridge (Sender/Receiver Component)
+
+contest_pybridge.exe is used by network_main to send/receive packets. It takes a port number as an argument to enable loopback communication between the pybridge and network_main so that network_main is able to make use of the functionality in pybridge. It makes use of UDP protocols with additional features to handle packet rerequesting and integrity checking. Places received files in a folder marked ReceivedFiles in the model directory where P2Ping has been installed. Sends a request to a stun server to receive an IPv6 address for the user. 
+
+
+## Main (Controller Component)
+
+
