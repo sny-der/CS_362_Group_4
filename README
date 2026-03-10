@@ -1,7 +1,0 @@
-gcc -O2 -Wall -Wextra -std=c11 -o contest_pybridge.exe 2ipv6test_windows.c -lws2_32 -lbcrypt
-
-The code was translated from linux by chat GPT.
-
-The executable name needs to be contest_pybridge.exe
-
-If the compiler commands doesn't work, consider removing some of the flags.
