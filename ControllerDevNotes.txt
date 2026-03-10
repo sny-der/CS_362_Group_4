@@ -4,7 +4,8 @@ WIP -Charles
 
 How it Works:
 
-The Python file calls this program whith a loopback communication port as an argument. The C program then sends its loopback communication port back to the C file. This is how the C and python files communicate. When the python program wants to send the C file a message, it will create a packet with an 8 character header and appropriate content. This will then be sent to the C program. The C program will do the same to the python file. The python file will use the appropriate messages to tell the C program what to do. The C progam will then analyse the incoming orders and act accordingly. When the C file is sending a message over the open internet, it uses a similar system. The packets are the same, but this time with an IP address of a different computer and a 12 character body header instead of an 8 character one. All of the python functions and cross device communication system are based on these protocols.
+The Python file calls this program whith a loopback communication port as an argument. The C program then sends its loopback communication port back to the C file. This is how the C and python files communicate. When the python program wants to send the C file a message, it will create a packet with an 8 character header and appropriate content. This will then be sent to the C program.
+The C program will do the same to the python file. The python file will use the appropriate messages to tell the C program what to do. The C progam will then analyse the incoming orders and act accordingly. When the C file is sending a message over the open internet, it uses a similar system. The packets are the same, but this time with an IP address of a different computer and a 12 character body header instead of an 8 character one. All of the python functions and cross device communication system are based on these protocols.
 
 How to Use: 
 
