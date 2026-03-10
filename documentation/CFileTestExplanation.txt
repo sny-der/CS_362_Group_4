@@ -1,0 +1,45 @@
+The tests it runs
+------------------
+1) Control plane:
+   - Bridge sends CTLPORT- (its chosen control port)
+   - Script sends MKLOCAL- to create a local peer socket
+   - Bridge replies with MYENDP-- (shareable endpoint)
+
+2) Peer connection through a relay:
+   - Script starts a Python IPv6 UDP relay with 2 ports
+   - Script sends SETPEER- to point each bridge at a relay port
+   - Relay forwards packets between bridges
+
+3) Chat:
+   - Script sends MSG----- from C1 (control plane)
+   - C1 forwards it to peer as TEXTMSG-----
+   - Script polls C2 using GETMSG-- until it receives the message back as MSG-----
+
+4) File transfer:
+   - Script sends SNDFILE- file1.bin
+   - Immediately sends SNDFILE- file2.bin to test FIFO file queue
+   - Waits for INFO---- lines "File received: <path>" on C2
+
+5) Retransmission (FILEREQ):
+   - The relay drops selected FILECHNK---- packets ONCE on the C1->C2 direction.
+   - The receiver should notice missing chunks and send FILEREQ-----.
+   - The relay logs FILEREQ indices and the script asserts it observed the dropped indices.
+
+6) Integrity:
+   - Script computes SHA-256 for both originals and both received files.
+   - Asserts both hashes match.
+
+How to run (simplest)
+---------------------
+1) Put test_bridge_windows.py in the same folder as your compiled executable.
+2) Open PowerShell or CMD in that folder.
+3) Run:
+     python .\test_bridge_windows.py --exe .\contest_pybridge.exe
+
+How to run (build + test)
+-------------------------
+Option A: MSVC (recommended)
+1) Open “x64 Native Tools Command Prompt for VS”.
+2) cd to your project directory.
+3) Run:
+     python .\test_bridge_windows.py --build --toolchain msvc --cfile .\ipv6test_windows.c --exe .\contest_pybridge.exe
