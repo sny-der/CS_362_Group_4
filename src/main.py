@@ -85,8 +85,9 @@ def message_poller(app):
         if bridge._runtime and bridge._runtime.running:
             msg = bridge.read_inc_message_queue()
 
-        if not msg or msg.startswith("ERROR:") or msg == "":
-            time.sleep(0.5) # Wait a bit longer if empty
+        # 1. Ignore empty/error messages
+        if not msg or msg == "" or msg.startswith("ERROR:"):
+            time.sleep(0.2)
             continue
 
         if msg.startswith("FILE:"):
