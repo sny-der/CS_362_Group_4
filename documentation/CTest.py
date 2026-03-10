@@ -7,19 +7,6 @@ test_bridge_windows.py
 
 Windows test harness for the IPv6 UDP bridge (contest_pybridge.exe).
 
-What it does (high level):
-  - Spawns TWO bridge processes
-  - Acts like a minimal Python controller for each process:
-      * Receives CTLPORT- from each bridge
-      * Sends MKLOCAL- to make a local peer socket
-      * Reads MYENDP-- (validates feature)
-      * Sends SETPEER- to connect each bridge to a Python relay (proxy)
-      * Sends MSG----- and polls GETMSG-- to validate chat
-      * Sends SNDFILE- to validate file transfer
-  - Runs a Python UDP IPv6 relay between the two bridges' peer sockets.
-    The relay can DROP selected FILECHNK packets ONCE to force FILEREQ retransmission.
-  - Verifies received files by SHA-256 hash.
-
 Requirements:
   - Windows 10/11
   - Python 3.8+
