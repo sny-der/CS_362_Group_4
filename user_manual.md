@@ -15,8 +15,9 @@ Set up is complete and you are ready to run P2Ping!
 
 **Note:** P2Ping requires an IPv6 connection to run properly. You can check if you are using an IPv6 connection [here](https://test-ipv6.com/). If you do not have an IPv6 connection through your current network, you will have to switch to another network that has IPv6 allowed (i.e. mobile hotspot) in order to use P2Ping in its current state.
 
+**Received Files:** files received will be stored in the directory marked ReceivedFiles in the model subdirectory of P2Ping.
 
-## Using P2Ping to commuicate with others
+## Using P2Ping to communicate with others
 1. Click on the "Connect to Peers" button on the top right corner of the screen.
 2. First decide on a local connection (if on the same wifi) or a public connection (across networks).
 3. Next take the IP address listed and send it to your peer who is ready to connect to your device. Have your peer do the same on their end and send you their IP address.
