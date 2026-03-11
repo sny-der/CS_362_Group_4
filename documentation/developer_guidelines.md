@@ -1,12 +1,3 @@
-The developer documentation should include at least the following information:
-
-- How to obtain the source code. If your system uses multiple repositories or submodules, provide clear instructions for how to obtain all relevant sources.
--The layout of your directory structure. What do the various directories (folders) contain, and where to find source files, tests, documentation, data files, etc.
-- How to build the software. Provide clear instructions for how to use your project’s build system to build all system components.
-- How to test the software. Provide clear instructions for how to run the system’s test cases. In some cases, the instructions may need to include information such as how to access data sources or how to interact with external systems. You may reference the user documentation (e.g., prerequisites) to avoid duplication.
-- How to add new tests. Are there any naming conventions/patterns to follow when naming test files? Is there a particular test harness to use?
-- How to build a release of the software. Describe any tasks that are not automated. For example, should a developer update a version number (in code and documentation) prior to invoking the build system? Are there any sanity checks a developer should perform after building a release?
-
 # Source Code
 All source code is either contained in this repository or within the required libraries. Explanations of the files that make up the different components can be found below.
 
@@ -30,6 +21,9 @@ Reports contains progress reports from the development team throughout the devel
 ### SRC
 SRC contains the source code created by the development team in three subdirectories; controller, model, and view; and contains the main file.
 
+#### Dist
+Dist contains P2Ping.exe, the executable for the overall program.
+
 #### Controller
 Controller is used to contain the intermediary components that communicate between the model and view components.
 
@@ -40,9 +34,9 @@ Model contains the pybridge c file, the .exe it creates, and the python files th
 View contains the GUI, and is used to contain the frontend user-centric components.
 
 ### Root files
-The main directory contains all subdirectories, and all outside facing documents, such as the readme and user-manual, in order to properly convey the functions and use of P2Ping.
+The main directory contains all subdirectories, and all outside facing documents, such as the readme and user-manual, in order to properly convey the functions and use of P2Ping. The main directory also contains the spec file used to build P2Ping.exe
 
-## For re-compling the C code
+## For re-compiling the C code
 The c file "2ipv6test_windows.c" is complied with this command:
 - ```gcc -Wall -Wextra -O2 2ipv6test_windows.c -o contest_pybridge.exe -lws2_32 -lbcrypt```
 
