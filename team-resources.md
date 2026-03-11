@@ -496,3 +496,10 @@ To ensure all core requirements are met, we have identified four specific test s
 
 * **Regression Strategy:** These suites will be executed after every major feature merge to ensure that new code (such as UI updates) does not introduce regressions into the sensitive networking or cryptographic layers.
 * **Success Metric:** A test is considered "Passed" only if the SHA-256 hash of the received file perfectly matches the source file hash after being processed through the encryption and chunking pipeline.
+
+
+  # Reflections
+  ### Jonathan Snyder:
+  ### Abram Gallup:
+  ### Charles Weber:
+  ### Arjun Bhave:
