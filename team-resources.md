@@ -500,6 +500,9 @@ To ensure all core requirements are met, we have identified four specific test s
 
   # Reflections
   ### Jonathan Snyder:
+  - Having clear deadlines for plans/tasks is essential to ensuring steady progress. Incorporating specific deadlines into our goals helped us make significant progress, and implementing deadlines sooner would likely have allowed us to make more progress earlier into the project.
+  - In-person meetings provide the best opportunity to establish team focus. Conveying goals asynchronously often took longer, and was more confusing, whereas setting goals and tasks as a team in person or at least over a call was often the most efficient and effective way to get everyone on the same page.
+  - Having a clear 'problem' to fix helps immensely with requirements elicitation, as it can provide a framework of what not to do, which makes determining what the project should do a lot faster, and allows the team to start determining how to fulfill our requirements a lot faster.
   ### Abram Gallup:
   ### Charles Weber:
   ### Arjun Bhave:
