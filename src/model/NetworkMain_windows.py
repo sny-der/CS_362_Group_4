@@ -10,13 +10,18 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
+import sys
 
-MODULE_DIR = Path(__file__).resolve().parent
-C_SOURCE_PATH = MODULE_DIR / "2ipv6test_windows.c"
+if getattr(sys, "frozen", False):
+    # Running inside PyInstaller bundle
+    MODULE_DIR = Path(sys._MEIPASS)
+else:
+    # Running normally from source
+    MODULE_DIR = Path(__file__).resolve().parent
 
 # Windows needs an .exe suffix; POSIX does not.
 C_EXE_BASENAME = "contest_pybridge"
-C_EXE_PATH = MODULE_DIR / (C_EXE_BASENAME + (".exe" if os.name == "nt" else ""))
+C_EXE_PATH = MODULE_DIR / "model" / (C_EXE_BASENAME + (".exe" if os.name == "nt" else ""))
 
 STATE_FILE_PATH = MODULE_DIR / "NetworkBridgeState.txt"
 
@@ -118,110 +123,14 @@ def _exe_is_usable(path: Path) -> bool:
     return os.access(path, os.X_OK)
 
 
-def _build_with_gcc() -> bool:
-    # Works on Linux/macOS; also works on Windows if MinGW-w64 is installed.
-    cmd = [
-        "gcc",
-        "-O2",
-        "-Wall",
-        "-Wextra",
-        "-std=c11",
-        "-o",
-        str(C_EXE_PATH),
-        str(C_SOURCE_PATH),
-    ]
-    if os.name == "nt":
-        cmd.extend(["-lws2_32", "-lbcrypt"])
-    build = subprocess.run(
-        cmd,
-        cwd=str(MODULE_DIR),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-    )
-    if build.returncode != 0:
-        if build.stdout.strip():
-            _print_problem(build.stdout.strip())
-        if build.stderr.strip():
-            _print_problem(build.stderr.strip())
-        return False
-    return _exe_is_usable(C_EXE_PATH)
-
-
-def _build_with_msvc() -> bool:
-    # Requires a "Developer Command Prompt" (cl.exe on PATH).
-    # Produces contest_pybridge.exe and links only system libs.
-    exe_name = C_EXE_PATH.name
-    cmd = [
-        "cl",
-        "/nologo",
-        "/O2",
-        "/W4",
-        "/DWIN32_LEAN_AND_MEAN",
-        "/D_CRT_SECURE_NO_WARNINGS",
-        str(C_SOURCE_PATH),
-        "/Fe:" + exe_name,
-        "ws2_32.lib",
-        "bcrypt.lib",
-    ]
-    build = subprocess.run(
-        cmd,
-        cwd=str(MODULE_DIR),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-    )
-    if build.returncode != 0:
-        if build.stdout.strip():
-            _print_problem(build.stdout.strip())
-        if build.stderr.strip():
-            _print_problem(build.stderr.strip())
-        return False
-    return _exe_is_usable(C_EXE_PATH)
 
 
 def _ensure_c_executable() -> bool:
     if _exe_is_usable(C_EXE_PATH):
         return True
 
-    if not C_SOURCE_PATH.exists():
-        _print_problem(f"C source not found at {C_SOURCE_PATH}")
-        return False
-
-    _print_problem("Building the C bridge executable...")
-
-    if os.name == "nt":
-        # Prefer MSVC when available (no extra toolchain runtime DLLs in typical setups).
-        if shutil.which("cl") is not None and _build_with_msvc():
-            return True
-        if shutil.which("gcc") is not None and _build_with_gcc():
-            return True
-        _print_problem(
-            """No suitable C compiler found. Install either:
-"
-            "  - Visual Studio Build Tools (cl.exe), or
-"
-            "  - MinGW-w64 (gcc.exe)
-"
-            "Then rerun."""
-        )
-        return False
-
-    if shutil.which("gcc") is None:
-        _print_problem("gcc is not available, so the C bridge cannot be built.")
-        return False
-
-    if not _build_with_gcc():
-        _print_problem("Failed to build the C bridge executable.")
-        return False
-
-    try:
-        C_EXE_PATH.chmod(0o755)
-    except OSError:
-        pass
-    return _exe_is_usable(C_EXE_PATH)
+    _print_problem(f"C bridge executable not found at {C_EXE_PATH}")
+    return False
 
 
 def _build_packet(pkt_type: bytes, payload_text: str = "") -> bytes:
