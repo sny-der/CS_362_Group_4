@@ -446,56 +446,34 @@ We will receive feedback from the instructor and TA's after the weekly class ses
 We plan to release a user guide with the system, explaining how to connect to other users, how to upload files, and how to set file paths or names. This will be developed after all components have been integrated, and will be modified after usability testing based on user feedback. We also plan to release dev guides with the software, detailing core components and how they function. This will be developed as each component is completed, which will also enable the team to better understand components they do not create.
 
 # Testing Plan 
+### 1. Proof of Concept: Splitter Testing
+Before full integration, we focused on the reliability of the file-handling logic. We used a dedicated splitter_tester.py script to ensure files could be disassembled and reassembled without corruption.
 
-### 1. Unit Testing Strategy
-Focus: Testing individual functions in isolation (no network involved).
+- Focus: Verifying that various file formats maintain integrity through the chunking process.
 
-- Testing: Cryptographic functions (Key derivation), File Chunking logic, and IP validation regex.
+- Results: Successfully validated local transfers for .txt, .pptx, .pdf, .zip, .docx, .jpeg, .png, and .exe files.
 
-- This is so we can ensure the math and data-handling logic are perfect before adding the unpredictability of a network.
+- Reference: Details can be found in the [splitter_test_log.md](https://github.com/sny-der/CS_362_Group_4/blob/main/documentation/test_logs/splitter_test_log.md)
 
-- We will use the PyTest framework to run a suite of "Assert" tests.
-- Example: A unit test will feed a 1MB file into our Chunker and verify that it produces exactly 16 chunks of 64KB, and that the Checksum matches the original.
+### 2. Automated Bridge Testing
+To validate the C-based networking component (contest_pybridge.exe), we utilized an automated Python test harness.
 
-- Boundary Testing: We will test "Empty File" and "Extremely Large File Name" scenarios to ensure the code doesn't crash on edge cases.
+- Focus: Testing the control plane, peer connection via relays, and message/file transfer integrity using SHA-256 hash verification.
 
-### 2. System (Integration) Testing Strategy
-Focus: Testing the interaction between the Networking, Encryption, and Storage layers.
+- Methodology: The [CTest.py](https://github.com/sny-der/CS_362_Group_4/blob/main/documentation/CTest.py) script simulates network conditions, including dropping packets to force and verify the retransmission (FILEREQ) logic.
 
-- Testing: The "Handshake" flow, the NAT traversal success rate, and end-to-end file integrity.
+- Reference: A full breakdown of these tests is available in the [CFileTestExplanation.txt](https://github.com/sny-der/CS_362_Group_4/blob/main/documentation/CFileTestExplanation.txt).
 
-- We want to test this becasue in P2P, bugs can happen when two different computers try to "talk" at the same time.
+### 3. System Integration Testing
+The final phase involved manual "Black-Box" testing of the full P2Ping application to ensure the GUI, Controller, and Model layers communicated correctly across different network environments.
 
-- We will run two instances of the app on one machine using 127.0.0.1 to test the state machine.
+- Focus: End-to-end functionality for both Local and Public connections.
 
-- Virtual Network Simulation: Using tools or multiple laptops to simulate high latency and packet loss. We need to see if our "Chunking" protocol can handle a "dropped" packet without corrupting the whole file.
+- Success Metrics: A test was marked "Successful" if the receiver could view the message content or access the transferred file (PNG/MP3) directly via their file explorer.
 
-- Cross-OS Testing: Validating that a file sent from Windows is saved correctly on a Linux/Mac machine (verifying the pathlib mitigation).
+- Results: Verified successful message and file transfers across both local loopback and public internet connections.
 
-### 3. Usability Testing Strategy
-Focus: The human element and the "Zero-Knowledge" requirement.
-
-- Testing: The "One-Click" connection feature and the clarity of the Manual Connection String fallback.
-
-- This is becasue if a user can’t figure out how to share their connection string, the "Easy Discovery" feature has failed.
-
-- Black-Box Testing: We will give the app to a person who has not worked on the code. We will provide them with a peer's connection string and observe if they can establish a connection and send a file without asking the developers for help.
-
-- Latency Perception: Measuring the "time to connect." If the NAT hole-punching takes more than 10 seconds, we need to implement a "Loading" bar to prevent the user from thinking the app is frozen.
-
-### 4. Specific Test Suites
-
-To ensure all core requirements are met, we have identified four specific test suites that map directly to our project features and high-level risks.
-
-| Suite Name | Requirement Mapping | Test Case Description |
-| :--- | :--- | :--- |
-| **Crypto-Validation Suite** | Feature 4: Zero-Knowledge Handshake | **Secret Agreement Verification:** Uses mocked network inputs to ensure Peer A and Peer B derive an identical AES-256 session key via ECDH without ever transmitting the key itself. |
-| **Stream-Integrity Suite** | Feature 3: Binary Chunking Protocol | **Corruption & Sequence Testing:** Simulates a "dropped" data chunk or an out-of-order packet to verify that the binary chunking engine correctly requests re-transmission and maintains file integrity. |
-| **Connectivity-Matrix Suite** | Feature 2: NAT Traversal | **Heterogeneous Network Test:** Validates the STUN-assisted hole punching success rate by testing across different NAT types (e.g., Home Router to 5G Mobile Hotspot). |
-| **Discovery & Fallback Suite** | Feature 1: Peer Discovery | **Re-addressing Persistence:** Simulates a dynamic IP change on one peer and verifies that the system can re-establish the link using the "Manual Connection String" fallback. |
-
-* **Regression Strategy:** These suites will be executed after every major feature merge to ensure that new code (such as UI updates) does not introduce regressions into the sensitive networking or cryptographic layers.
-* **Success Metric:** A test is considered "Passed" only if the SHA-256 hash of the received file perfectly matches the source file hash after being processed through the encryption and chunking pipeline.
+Reference: See the [integration_test_log.md](https://github.com/sny-der/CS_362_Group_4/blob/main/documentation/test_logs/integration_test_log.md).
 
 
   # Reflections
