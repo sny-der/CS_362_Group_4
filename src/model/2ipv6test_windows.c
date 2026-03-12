@@ -45,6 +45,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <shlobj.h>
 
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -56,6 +57,7 @@
 #define PEER_TYPE_LEN              12
 #define PEER_PKT_SIZE              1200
 #define PEER_PAYLOAD_MAX           (PEER_PKT_SIZE - PEER_TYPE_LEN)
+#define MAX_PATH_LEN               1024
 
 /* Peer message payload: u16 msg_len | msg bytes */
 #define PEERMSG_HDR_LEN            2
@@ -112,6 +114,7 @@
 #define PEER_FILEREQ   "FILEREQ-----"
 #define PEER_FILEDONE  "FILEDONE----"
 #define PEER_FILECONF  "FILECONF----"
+
 
 /* ============================== Helpers ============================== */
 
@@ -329,6 +332,7 @@ typedef struct {
     long long last_punch_ms;
     int punches_left;
     char shareable_endpoint[MAX_SHAREABLE_ENDPOINT];
+    char received_dir[MAX_PATH_LEN];
 
     CRITICAL_SECTION msg_mtx;
     char latest_message[MAX_MESSAGE_STORE];
@@ -914,17 +918,66 @@ static int resendq_pop_front(outgoing_transfer_t *out, uint32_t *out_idx) {
 
 /* ============================== File helpers ============================== */
 
-static int ensure_received_dir(void) {
-    DWORD attr = GetFileAttributesA(RECEIVED_DIR_NAME);
-    if (attr != INVALID_FILE_ATTRIBUTES) {
-        if (attr & FILE_ATTRIBUTE_DIRECTORY) return 0;
-        return -1;
+static int create_received_folder(char *out_path, size_t out_path_sz, const char *base_dir) {
+    if (!base_dir || !*base_dir) return -1;
+
+    // Append ReceivedFiles to base_dir
+    snprintf(out_path, out_path_sz, "%s\\%s", base_dir, RECEIVED_DIR_NAME);
+
+    // Create the folder (mkdir returns nonzero if already exists, ignore ERROR_ALREADY_EXISTS)
+    if (_mkdir(out_path) != 0) {
+        DWORD err = GetLastError();
+        if (err != ERROR_ALREADY_EXISTS) {
+            fprintf(stderr, "Failed to create folder %s (Error %lu)\n", out_path, err);
+            return -1;
+        }
     }
-    if (!CreateDirectoryA(RECEIVED_DIR_NAME, NULL)) {
-        DWORD e = GetLastError();
-        if (e == ERROR_ALREADY_EXISTS) return 0;
+    return 0;
+}
+
+static int get_exe_dir(char *out, size_t out_sz) {
+    char path[MAX_PATH];
+    DWORD len = GetModuleFileNameA(NULL, path, MAX_PATH);
+    if (len == 0 || len >= MAX_PATH) return -1;
+
+    char *slash = strrchr(path, '\\');
+    if (!slash) return -2;
+
+    *slash = '\0';  // remove exe name
+    snprintf(out, out_sz, "%s", path);
+    return 0;
+}
+
+static int build_received_dir(char *out, size_t out_sz) {
+    char exe_dir[MAX_PATH];
+    if (get_exe_dir(exe_dir, sizeof(exe_dir)) != 0)
+        return -1;
+
+    if (_snprintf(out, (int)out_sz, "%s\\%s", exe_dir, RECEIVED_DIR_NAME) < 0)
+        return -2;
+
+    return 0;
+}
+
+static int ensure_received_dir(char *out_dir, size_t out_sz) {
+    if (build_received_dir(out_dir, out_sz) != 0)
+        return -1;
+
+    DWORD attr = GetFileAttributesA(out_dir);
+
+    if (attr != INVALID_FILE_ATTRIBUTES) {
+        if (attr & FILE_ATTRIBUTE_DIRECTORY)
+            return 0;
         return -2;
     }
+
+    if (!CreateDirectoryA(out_dir, NULL)) {
+        DWORD e = GetLastError();
+        if (e == ERROR_ALREADY_EXISTS)
+            return 0;
+        return -3;
+    }
+
     return 0;
 }
 
@@ -934,17 +987,24 @@ static int file_exists(const char *path) {
 }
 
 static int make_unique_output_path(const char *dir, const char *filename, char *out, size_t out_sz) {
-    if (_snprintf(out, (int)out_sz, "%s\\%s", dir, filename) < 0) return -1;
-    if (!file_exists(out)) return 0;
+
+    if (_snprintf(out, (int)out_sz, "%s\\%s", dir, filename) < 0)
+        return -1;
+
+    if (!file_exists(out))
+        return 0;
 
     const char *dot = strrchr(filename, '.');
     char base[512];
     char ext[128];
+
     if (dot && dot != filename) {
         size_t bl = (size_t)(dot - filename);
         if (bl >= sizeof(base)) bl = sizeof(base) - 1;
+
         memcpy(base, filename, bl);
         base[bl] = '\0';
+
         strncpy(ext, dot, sizeof(ext) - 1);
         ext[sizeof(ext) - 1] = '\0';
     } else {
@@ -954,9 +1014,14 @@ static int make_unique_output_path(const char *dir, const char *filename, char *
     }
 
     for (int i = 1; i < 100000; i++) {
-        if (_snprintf(out, (int)out_sz, "%s\\%s (%d)%s", dir, base, i, ext) < 0) return -2;
-        if (!file_exists(out)) return 0;
+
+        if (_snprintf(out, (int)out_sz, "%s\\%s (%d)%s", dir, base, i, ext) < 0)
+            return -2;
+
+        if (!file_exists(out))
+            return 0;
     }
+
     return -3;
 }
 
@@ -1224,30 +1289,37 @@ static void sender_send_current_transfer(app_state_t *st) {
 /* ============================== (bitmap + SetFilePointerEx/WriteFile) ============================== */
 
 static void incoming_clear_locked(incoming_transfer_t *in) {
-    if (in->hfile && in->hfile != INVALID_HANDLE_VALUE) CloseHandle(in->hfile);
+    if (in->hfile && in->hfile != INVALID_HANDLE_VALUE) 
+        CloseHandle(in->hfile);
     in->hfile = INVALID_HANDLE_VALUE;
-    bitmap_free(&in->received_bm);
-    memset(in, 0, sizeof(*in));
-    in->hfile = INVALID_HANDLE_VALUE;
-}
 
-/* Write file at offset (synchronous) */
-static int file_write_at(HANDLE hf, uint64_t off, const uint8_t *buf, DWORD len) {
-    LARGE_INTEGER li;
-    li.QuadPart = (LONGLONG)off;
-    if (!SetFilePointerEx(hf, li, NULL, FILE_BEGIN)) return -1;
-    DWORD wrote = 0;
-    if (!WriteFile(hf, buf, len, &wrote, NULL)) return -1;
-    return (wrote == len) ? 0 : -1;
+    bitmap_free(&in->received_bm);
+
+    // Only clear most fields, preserve output_path
+    char saved_output_path[PATH_MAX_CHARS];
+    strncpy(saved_output_path, in->output_path, sizeof(saved_output_path));
+
+    memset(in, 0, sizeof(*in));
+
+    in->hfile = INVALID_HANDLE_VALUE;
+
+    // Restore output path
+    strncpy(in->output_path, saved_output_path, sizeof(in->output_path));
 }
+/* Write file at offset (synchronous) */ 
+static int file_write_at(HANDLE hf, uint64_t off, const uint8_t *buf, DWORD len) { 
+    LARGE_INTEGER li; 
+    li.QuadPart = (LONGLONG)off; 
+    if (!SetFilePointerEx(hf, li, NULL, FILE_BEGIN)) return -1; 
+    DWORD wrote = 0; 
+    if (!WriteFile(hf, buf, len, &wrote, NULL)) return -1; 
+    return (wrote == len) ? 0 : -1; }
 
 static int incoming_handle_meta(app_state_t *st, const uint8_t *payload) {
-    /* transfer_id[16] | filesize[8] | total[4] | name_len[2] | name */
     const size_t need_min = TRANSFER_ID_LEN + 8 + 4 + 2;
     if (PEER_PAYLOAD_MAX < need_min) return -1;
 
     const uint8_t *p = payload;
-
     uint8_t tid[TRANSFER_ID_LEN];
     memcpy(tid, p, TRANSFER_ID_LEN); p += TRANSFER_ID_LEN;
     uint64_t filesize = read_be64(p); p += 8;
@@ -1268,11 +1340,8 @@ static int incoming_handle_meta(app_state_t *st, const uint8_t *payload) {
 
     incoming_clear_locked(in);
 
-    if (ensure_received_dir() != 0) {
-        LeaveCriticalSection(&st->in_mtx);
-        notify_info(st, "Failed to create ReceivedFiles directory.");
-        return -4;
-    }
+    // Use the persistent folder from main
+    const char *received_dir = st->received_dir;
 
     memcpy(in->transfer_id, tid, TRANSFER_ID_LEN);
     in->filesize = filesize;
@@ -1281,7 +1350,7 @@ static int incoming_handle_meta(app_state_t *st, const uint8_t *payload) {
     memcpy(in->filename, p, name_len);
     in->filename[name_len] = '\0';
 
-    if (make_unique_output_path(RECEIVED_DIR_NAME, in->filename, in->output_path, sizeof(in->output_path)) != 0) {
+    if (make_unique_output_path(received_dir, in->filename, in->output_path, sizeof(in->output_path)) != 0) {
         LeaveCriticalSection(&st->in_mtx);
         notify_info(st, "Failed to pick unique output filename.");
         return -5;
@@ -1294,8 +1363,13 @@ static int incoming_handle_meta(app_state_t *st, const uint8_t *payload) {
         return -6;
     }
 
-    HANDLE hf = CreateFileA(in->output_path, GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ,
-                            NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hf = CreateFileA(in->output_path,
+                            GENERIC_WRITE | GENERIC_READ,
+                            FILE_SHARE_READ,
+                            NULL,
+                            CREATE_ALWAYS,
+                            FILE_ATTRIBUTE_NORMAL,
+                            NULL);
     if (hf == INVALID_HANDLE_VALUE) {
         incoming_clear_locked(in);
         LeaveCriticalSection(&st->in_mtx);
@@ -1303,7 +1377,7 @@ static int incoming_handle_meta(app_state_t *st, const uint8_t *payload) {
         return -7;
     }
 
-    /* Pre-size file (optional but helpful) */
+    // Pre-size file to final size (optional, helpful for large files)
     LARGE_INTEGER li;
     li.QuadPart = (LONGLONG)filesize;
     SetFilePointerEx(hf, li, NULL, FILE_BEGIN);
@@ -2018,6 +2092,7 @@ static void app_state_init(app_state_t *st) {
     st->stop_flag = 0;
     st->outgoing.hfile = INVALID_HANDLE_VALUE;
     st->incoming.hfile = INVALID_HANDLE_VALUE;
+    st->received_dir[0] = '\0';
 
     InitializeCriticalSection(&st->msg_mtx);
     InitializeCriticalSection(&st->peer_mtx);
@@ -2100,25 +2175,42 @@ static void stop_threads(app_state_t *st) {
 /* ============================== main ============================== */
 
 int main(int argc, char **argv) {
+    char received_dir[MAX_PATH];
+
     if (sockets_init() != 0) return 1;
 
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <python_recv_port>\n", argv[0]);
-        sockets_cleanup();
-        return 1;
-    }
+    if (argc < 3) {
+    fprintf(stderr, "Usage: %s <python_recv_port> <outermost_exe_dir>\n", argv[0]);
+    sockets_cleanup();
+    return 1;
+}
 
+    // Convert Python port
     char *end = NULL;
-    unsigned long py_port_ul = strtoul(argv[1], &end, 10);
-    if (!end || *end != '\0' || py_port_ul == 0 || py_port_ul > 65535UL) {
-        fprintf(stderr, "Invalid python_recv_port: %s\n", argv[1]);
-        sockets_cleanup();
-        return 1;
-    }
+unsigned long py_port_ul = strtoul(argv[1], &end, 10);
+if (!end || *end != '\0' || py_port_ul == 0 || py_port_ul > 65535UL) {
+    fprintf(stderr, "Invalid python_recv_port: %s\n", argv[1]);
+    sockets_cleanup();
+    return 1;
+}
 
+    const char *exe_dir = argv[2];
     app_state_t st;
     app_state_init(&st);
 
+    // Create persistent ReceivedFiles folder
+
+    if (create_received_folder(received_dir, sizeof(received_dir), exe_dir) != 0) {
+    fprintf(stderr, "Failed to create ReceivedFiles folder.\n");
+    app_state_destroy(&st);
+    sockets_cleanup();
+    return 1;
+    }
+    strncpy(st.received_dir, received_dir, sizeof(st.received_dir)-1);
+
+    printf("ReceivedFiles folder: %s\n", st.received_dir);
+
+    // Setup Python address and control socket (as before)...
     memset(&st.python_addr, 0, sizeof(st.python_addr));
     st.python_addr.sin6_family = AF_INET6;
     st.python_addr.sin6_port = htons((uint16_t)py_port_ul);

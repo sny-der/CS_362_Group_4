@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Optional
 import sys
 
+_exe_dir: Optional[str] = None
+
 if getattr(sys, "frozen", False):
     # Running inside PyInstaller bundle
     MODULE_DIR = Path(sys._MEIPASS)
@@ -305,8 +307,9 @@ def _request_endpoint(mode_packet: bytes, mode_name: str) -> str:
     return rt.last_endpoint
 
 
-def startup() -> Optional[tuple[str, str]]:
-    global _runtime
+def startup(exe_dir: str) -> Optional[tuple[str, str]]:
+    global _runtime, _exe_dir
+    _exe_dir = exe_dir
 
     if not _ensure_c_executable():
         return None
@@ -324,7 +327,7 @@ def startup() -> Optional[tuple[str, str]]:
     py_sock.bind((HOST, 0))
     recv_port = py_sock.getsockname()[1]
 
-    proc = subprocess.Popen([str(C_EXE_PATH), str(recv_port)], cwd=str(MODULE_DIR))
+    proc = subprocess.Popen([str(C_EXE_PATH), str(recv_port), exe_dir], cwd=str(MODULE_DIR))
     rt = BridgeRuntime(sock=py_sock, recv_port=recv_port, proc=proc)
     _runtime = rt
 

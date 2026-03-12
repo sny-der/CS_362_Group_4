@@ -5,9 +5,12 @@ import time
 from tkinter import filedialog
 import shutil
 import os
+import sys
 
 import model.NetworkMain_windows as bridge
 from view.gui import messaging_app
+
+exe_dir = os.path.dirname(sys.executable)
 
 def setup_gui_logic(app):
     """Links GUI buttons to NetworkMain_windows functions."""
@@ -17,7 +20,7 @@ def setup_gui_logic(app):
         # If already connected, uses this button
         if app.connect_btn.cget("text") == "End Connection":
             bridge.terminate_program() # Or your disconnect logic
-            bridge.startup()
+            bridge.startup(exe_dir)
             app.update_button_to_disconnect()
             return
         
@@ -114,16 +117,20 @@ def handle_incoming_file(app, temp_path):
             app.display_message("System", f"Failed to save file: {e}")
 
 if __name__ == "__main__":
+    # Determine location of the running executable
+    exe_dir = os.path.dirname(sys.executable)
+
     # 1. Start C Bridge
-    startup_info = bridge.startup()
+    startup_info = bridge.startup(exe_dir)
+
     if startup_info:
         # 2. Initialize GUI
         app = messaging_app()
         setup_gui_logic(app)
-        
+
         # 3. Start Poller
         threading.Thread(target=message_poller, args=(app,), daemon=True).start()
-        
+
         # 4. Run App
         try:
             app.mainloop()
