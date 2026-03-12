@@ -428,7 +428,7 @@ We will receive feedback from the instructor and TA's after the weekly class ses
 - Connected devices send directly to each other in the form of messages and files. The software can send different file types including large files. The software also has a simple messaging system for small texts and pings that users can send to each other.
 - Our transfer engine utilizes a binary chunking protocol to facilitate high-performance, serverless data exchange. By managing data in discrete segments with sequence-verification, we ensure 100% data integrity and optimal memory management during large-scale file transfers.
 
-### 4. A Zero Knowledge Handshake
+### 4. A Zero Knowledge Handshake (WIP, currently not implemented)
 - All encryption in done behind the scenes with no thought or action by the users.
 - Ensures privacy and peace of mind knowing shared files are stored locally and not constantly on the internet suseptible to online attacks. 
 - We utilize a Diffie-Hellman (ECDH) handshake to establish end-to-end encryption (E2EE) at the session layer. This ensures a 'Zero-Knowledge' architecture where a shared secret is derived locally on each peer, providing Perfect Forward Secrecy for all transmitted data.
