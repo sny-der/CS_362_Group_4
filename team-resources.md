@@ -366,8 +366,8 @@ Exception:
 ## Charles Weber
 Charles is taking on the role of a back-end developer, focusing on network connection and transport protocols. These components are necessary because they form the core functionality of this software. Charles is taking on this role because he has the most experience with network protocols, so he is best suited to this role.
 
-## Abrum Gallup
-Abrum is taking on the role of a back-end developer, focusing on encryption and databases. These components are necessary because they ensure the safety and continued use of this software. Abrum is the most familiar with these programs, so he is best suited to this role.
+## Abram Gallup
+Abram is taking on the role of a back-end developer, focusing on encryption and databases. These components are necessary because they ensure the safety and continued use of this software. Abram is the most familiar with these programs, so he is best suited to this role.
 
 ## Jonathan Snyder
 Jonathan is taking on the role of a back-end developer, focusing on file processing and management. These components are necessary because they allow our software to transmit saved files and to save files to the machine. Jonathan is the most familiar with these programs, so he is best suited to this role.
